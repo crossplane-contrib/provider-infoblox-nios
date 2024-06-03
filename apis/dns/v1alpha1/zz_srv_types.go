@@ -13,6 +13,33 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type SRVInitParameters struct {
+
+	// Description of the SRV-record
+	Comment *string `json:"comment,omitempty" tf:"comment,omitempty"`
+
+	// DNS view which the zone does exist within
+	DNSView *string `json:"dnsView,omitempty" tf:"dns_view,omitempty"`
+
+	// Extensible attributes of the SRV-record to be added/updated, as a map in JSON format.
+	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// Configures port number (0..65535) for this SRV-record.
+	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
+
+	// Configures the priority (0..65535) for this SRV-record.
+	Priority *float64 `json:"priority,omitempty" tf:"priority,omitempty"`
+
+	// TTL value for the SRV-record.
+	TTL *float64 `json:"ttl,omitempty" tf:"ttl,omitempty"`
+
+	// Provides service for domain name in the SRV-record.
+	Target *string `json:"target,omitempty" tf:"target,omitempty"`
+
+	// Configures weight of the SRV-record, valid values are 0..65535.
+	Weight *float64 `json:"weight,omitempty" tf:"weight,omitempty"`
+}
+
 type SRVObservation struct {
 
 	// Description of the SRV-record
@@ -81,6 +108,17 @@ type SRVParameters struct {
 type SRVSpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     SRVParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider SRVInitParameters `json:"initProvider,omitempty"`
 }
 
 // SRVStatus defines the observed state of SRV.
@@ -90,21 +128,22 @@ type SRVStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // SRV is the Schema for the SRVs API. <no value>
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,infoblox-nios}
 type SRV struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// +kubebuilder:validation:XValidation:rule="self.managementPolicy == 'ObserveOnly' || has(self.forProvider.port)",message="port is a required parameter"
-	// +kubebuilder:validation:XValidation:rule="self.managementPolicy == 'ObserveOnly' || has(self.forProvider.priority)",message="priority is a required parameter"
-	// +kubebuilder:validation:XValidation:rule="self.managementPolicy == 'ObserveOnly' || has(self.forProvider.target)",message="target is a required parameter"
-	// +kubebuilder:validation:XValidation:rule="self.managementPolicy == 'ObserveOnly' || has(self.forProvider.weight)",message="weight is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.port) || (has(self.initProvider) && has(self.initProvider.port))",message="spec.forProvider.port is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.priority) || (has(self.initProvider) && has(self.initProvider.priority))",message="spec.forProvider.priority is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.target) || (has(self.initProvider) && has(self.initProvider.target))",message="spec.forProvider.target is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.weight) || (has(self.initProvider) && has(self.initProvider.weight))",message="spec.forProvider.weight is a required parameter"
 	Spec   SRVSpec   `json:"spec"`
 	Status SRVStatus `json:"status,omitempty"`
 }

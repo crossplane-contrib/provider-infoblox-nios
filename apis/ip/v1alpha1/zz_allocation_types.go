@@ -13,6 +13,48 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type AllocationInitParameters struct {
+
+	// Value which comes from 'ipv4_addr' (if specified) or from auto-allocation function (using 'ipv4_cidr').
+	AllocatedIPv4Addr *string `json:"allocatedIpv4Addr,omitempty" tf:"allocated_ipv4_addr,omitempty"`
+
+	// Value which comes from 'ipv6_addr' (if specified) or from auto-allocation function (using 'ipv6_cidr').
+	AllocatedIPv6Addr *string `json:"allocatedIpv6Addr,omitempty" tf:"allocated_ipv6_addr,omitempty"`
+
+	// A description of IP address allocation.
+	Comment *string `json:"comment,omitempty" tf:"comment,omitempty"`
+
+	// DNS view under which the zone has been created.
+	DNSView *string `json:"dnsView,omitempty" tf:"dns_view,omitempty"`
+
+	// flag that defines if the host record is to be used for DNS purposes.
+	EnableDNS *bool `json:"enableDns,omitempty" tf:"enable_dns,omitempty"`
+
+	// The extensible attributes for IP address allocation, as a map in JSON format
+	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// The host name for Host Record in FQDN format.
+	Fqdn *string `json:"fqdn,omitempty" tf:"fqdn,omitempty"`
+
+	// IPv4 address of cloud instance.Set a valid IP address for static allocation and leave empty if dynamically allocated.
+	IPv4Addr *string `json:"ipv4Addr,omitempty" tf:"ipv4_addr,omitempty"`
+
+	// The IPv4 cidr from which an IPv4 address will be allocated.
+	IPv4Cidr *string `json:"ipv4Cidr,omitempty" tf:"ipv4_cidr,omitempty"`
+
+	// IPv6 address of cloud instance.Set a valid IP address for static allocation and leave empty if dynamically allocated.
+	IPv6Addr *string `json:"ipv6Addr,omitempty" tf:"ipv6_addr,omitempty"`
+
+	// The IPv6 cidr from which an IPv6 address will be allocated.
+	IPv6Cidr *string `json:"ipv6Cidr,omitempty" tf:"ipv6_cidr,omitempty"`
+
+	// network view name on NIOS server.
+	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
+
+	// TTL attribute value for the record.
+	TTL *float64 `json:"ttl,omitempty" tf:"ttl,omitempty"`
+}
+
 type AllocationObservation struct {
 
 	// Value which comes from 'ipv4_addr' (if specified) or from auto-allocation function (using 'ipv4_cidr').
@@ -121,6 +163,17 @@ type AllocationParameters struct {
 type AllocationSpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     AllocationParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider AllocationInitParameters `json:"initProvider,omitempty"`
 }
 
 // AllocationStatus defines the observed state of Allocation.
@@ -130,18 +183,19 @@ type AllocationStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // Allocation is the Schema for the Allocations API. <no value>
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,infoblox-nios}
 type Allocation struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// +kubebuilder:validation:XValidation:rule="self.managementPolicy == 'ObserveOnly' || has(self.forProvider.fqdn)",message="fqdn is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.fqdn) || (has(self.initProvider) && has(self.initProvider.fqdn))",message="spec.forProvider.fqdn is a required parameter"
 	Spec   AllocationSpec   `json:"spec"`
 	Status AllocationStatus `json:"status,omitempty"`
 }

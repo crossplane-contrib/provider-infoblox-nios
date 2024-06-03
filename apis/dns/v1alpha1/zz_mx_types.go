@@ -13,6 +13,30 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type MXInitParameters struct {
+
+	// Description of the MX-Record.
+	Comment *string `json:"comment,omitempty" tf:"comment,omitempty"`
+
+	// DNS view which the zone does exist within
+	DNSView *string `json:"dnsView,omitempty" tf:"dns_view,omitempty"`
+
+	// Extensible attributes of the MX-record to be added/updated, as a map in JSON format.
+	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// FQDN for the MX-record.
+	Fqdn *string `json:"fqdn,omitempty" tf:"fqdn,omitempty"`
+
+	// A record used to specify mail server.
+	MailExchanger *string `json:"mailExchanger,omitempty" tf:"mail_exchanger,omitempty"`
+
+	// Configures the preference (0-65535) for this MX-record.
+	Preference *float64 `json:"preference,omitempty" tf:"preference,omitempty"`
+
+	// TTL value for the MX-record.
+	TTL *float64 `json:"ttl,omitempty" tf:"ttl,omitempty"`
+}
+
 type MXObservation struct {
 
 	// Description of the MX-Record.
@@ -74,6 +98,17 @@ type MXParameters struct {
 type MXSpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     MXParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider MXInitParameters `json:"initProvider,omitempty"`
 }
 
 // MXStatus defines the observed state of MX.
@@ -83,20 +118,21 @@ type MXStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // MX is the Schema for the MXs API. <no value>
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,infoblox-nios}
 type MX struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// +kubebuilder:validation:XValidation:rule="self.managementPolicy == 'ObserveOnly' || has(self.forProvider.fqdn)",message="fqdn is a required parameter"
-	// +kubebuilder:validation:XValidation:rule="self.managementPolicy == 'ObserveOnly' || has(self.forProvider.mailExchanger)",message="mailExchanger is a required parameter"
-	// +kubebuilder:validation:XValidation:rule="self.managementPolicy == 'ObserveOnly' || has(self.forProvider.preference)",message="preference is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.fqdn) || (has(self.initProvider) && has(self.initProvider.fqdn))",message="spec.forProvider.fqdn is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.mailExchanger) || (has(self.initProvider) && has(self.initProvider.mailExchanger))",message="spec.forProvider.mailExchanger is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.preference) || (has(self.initProvider) && has(self.initProvider.preference))",message="spec.forProvider.preference is a required parameter"
 	Spec   MXSpec   `json:"spec"`
 	Status MXStatus `json:"status,omitempty"`
 }

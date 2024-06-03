@@ -10,13 +10,13 @@ package apis
 import (
 	"k8s.io/apimachinery/pkg/runtime"
 
-	v1alpha1 "github.com/fire-ant/provider-infoblox-nios/apis/dns/v1alpha1"
-	v1alpha1ip "github.com/fire-ant/provider-infoblox-nios/apis/ip/v1alpha1"
-	v1alpha1ipv4 "github.com/fire-ant/provider-infoblox-nios/apis/ipv4/v1alpha1"
-	v1alpha1ipv6 "github.com/fire-ant/provider-infoblox-nios/apis/ipv6/v1alpha1"
-	v1alpha1network "github.com/fire-ant/provider-infoblox-nios/apis/network/v1alpha1"
-	v1alpha1apis "github.com/fire-ant/provider-infoblox-nios/apis/v1alpha1"
-	v1beta1 "github.com/fire-ant/provider-infoblox-nios/apis/v1beta1"
+	v1alpha1 "github.com/crossplane-contrib/provider-infoblox-nios/apis/dns/v1alpha1"
+	v1alpha1ip "github.com/crossplane-contrib/provider-infoblox-nios/apis/ip/v1alpha1"
+	v1alpha1ipv4 "github.com/crossplane-contrib/provider-infoblox-nios/apis/ipv4/v1alpha1"
+	v1alpha1ipv6 "github.com/crossplane-contrib/provider-infoblox-nios/apis/ipv6/v1alpha1"
+	v1alpha1network "github.com/crossplane-contrib/provider-infoblox-nios/apis/network/v1alpha1"
+	v1alpha1apis "github.com/crossplane-contrib/provider-infoblox-nios/apis/v1alpha1"
+	v1beta1 "github.com/crossplane-contrib/provider-infoblox-nios/apis/v1beta1"
 )
 
 func init() {
