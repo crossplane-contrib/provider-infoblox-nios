@@ -4,7 +4,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: srvs.dns.infoblox-nios.upbound.io
+  name: mxs.dns.infoblox-nios.upbound.io
 spec:
   group: dns.infoblox-nios.upbound.io
   names:
@@ -12,10 +12,10 @@ spec:
     - crossplane
     - managed
     - infoblox-nios
-    kind: SRV
-    listKind: SRVList
-    plural: srvs
-    singular: srv
+    kind: MX
+    listKind: MXList
+    plural: mxs
+    singular: mx
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: SRV is the Schema for the SRVs API. <no value>
+        description: MX is the Schema for the MXs API. <no value>
         properties:
           apiVersion:
             description: |-
@@ -54,7 +54,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: SRVSpec defines the desired state of SRV
+            description: MXSpec defines the desired state of MX
             properties:
               deletionPolicy:
                 default: Delete
@@ -73,30 +73,26 @@ spec:
               forProvider:
                 properties:
                   comment:
-                    description: Description of the SRV-record
+                    description: Description of the MX-Record.
                     type: string
                   dnsView:
                     description: DNS view which the zone does exist within
                     type: string
                   extAttrs:
-                    description: Extensible attributes of the SRV-record to be added/updated,
+                    description: Extensible attributes of the MX-record to be added/updated,
                       as a map in JSON format.
                     type: string
-                  port:
-                    description: Configures port number (0..65535) for this SRV-record.
-                    type: number
-                  priority:
-                    description: Configures the priority (0..65535) for this SRV-record.
-                    type: number
-                  target:
-                    description: Provides service for domain name in the SRV-record.
+                  fqdn:
+                    description: FQDN for the MX-record.
                     type: string
-                  ttl:
-                    description: TTL value for the SRV-record.
+                  mailExchanger:
+                    description: A record used to specify mail server.
+                    type: string
+                  preference:
+                    description: Configures the preference (0-65535) for this MX-record.
                     type: number
-                  weight:
-                    description: Configures weight of the SRV-record, valid values
-                      are 0..65535.
+                  ttl:
+                    description: TTL value for the MX-record.
                     type: number
                 type: object
               initProvider:
@@ -113,30 +109,26 @@ spec:
                   autoscaler.
                 properties:
                   comment:
-                    description: Description of the SRV-record
+                    description: Description of the MX-Record.
                     type: string
                   dnsView:
                     description: DNS view which the zone does exist within
                     type: string
                   extAttrs:
-                    description: Extensible attributes of the SRV-record to be added/updated,
+                    description: Extensible attributes of the MX-record to be added/updated,
                       as a map in JSON format.
                     type: string
-                  port:
-                    description: Configures port number (0..65535) for this SRV-record.
-                    type: number
-                  priority:
-                    description: Configures the priority (0..65535) for this SRV-record.
-                    type: number
-                  target:
-                    description: Provides service for domain name in the SRV-record.
+                  fqdn:
+                    description: FQDN for the MX-record.
                     type: string
-                  ttl:
-                    description: TTL value for the SRV-record.
+                  mailExchanger:
+                    description: A record used to specify mail server.
+                    type: string
+                  preference:
+                    description: Configures the preference (0-65535) for this MX-record.
                     type: number
-                  weight:
-                    description: Configures weight of the SRV-record, valid values
-                      are 0..65535.
+                  ttl:
+                    description: TTL value for the MX-record.
                     type: number
                 type: object
               managementPolicies:
@@ -307,54 +299,46 @@ spec:
             - forProvider
             type: object
             x-kubernetes-validations:
-            - message: spec.forProvider.port is a required parameter
+            - message: spec.forProvider.fqdn is a required parameter
               rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.port)
-                || (has(self.initProvider) && has(self.initProvider.port))'
-            - message: spec.forProvider.priority is a required parameter
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.fqdn)
+                || (has(self.initProvider) && has(self.initProvider.fqdn))'
+            - message: spec.forProvider.mailExchanger is a required parameter
               rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.priority)
-                || (has(self.initProvider) && has(self.initProvider.priority))'
-            - message: spec.forProvider.target is a required parameter
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.mailExchanger)
+                || (has(self.initProvider) && has(self.initProvider.mailExchanger))'
+            - message: spec.forProvider.preference is a required parameter
               rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.target)
-                || (has(self.initProvider) && has(self.initProvider.target))'
-            - message: spec.forProvider.weight is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.weight)
-                || (has(self.initProvider) && has(self.initProvider.weight))'
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.preference)
+                || (has(self.initProvider) && has(self.initProvider.preference))'
           status:
-            description: SRVStatus defines the observed state of SRV.
+            description: MXStatus defines the observed state of MX.
             properties:
               atProvider:
                 properties:
                   comment:
-                    description: Description of the SRV-record
+                    description: Description of the MX-Record.
                     type: string
                   dnsView:
                     description: DNS view which the zone does exist within
                     type: string
                   extAttrs:
-                    description: Extensible attributes of the SRV-record to be added/updated,
+                    description: Extensible attributes of the MX-record to be added/updated,
                       as a map in JSON format.
+                    type: string
+                  fqdn:
+                    description: FQDN for the MX-record.
                     type: string
                   id:
                     type: string
-                  port:
-                    description: Configures port number (0..65535) for this SRV-record.
-                    type: number
-                  priority:
-                    description: Configures the priority (0..65535) for this SRV-record.
-                    type: number
-                  target:
-                    description: Provides service for domain name in the SRV-record.
+                  mailExchanger:
+                    description: A record used to specify mail server.
                     type: string
-                  ttl:
-                    description: TTL value for the SRV-record.
+                  preference:
+                    description: Configures the preference (0-65535) for this MX-record.
                     type: number
-                  weight:
-                    description: Configures weight of the SRV-record, valid values
-                      are 0..65535.
+                  ttl:
+                    description: TTL value for the MX-record.
                     type: number
                 type: object
               conditions:

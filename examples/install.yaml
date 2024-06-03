@@ -3,4 +3,4 @@ kind: Provider
 metadata:
   name: provider-infoblox-nios
 spec:
-  package: fire-ant/provider-infoblox-nios:v0.1.0
+  package: crossplane-contrib/provider-infoblox-nios:v0.1.0
