@@ -5,6 +5,8 @@ is built using [Upjet](https://github.com/crossplane/upjet) code
 generation tools and exposes XRM-conformant managed resources for
 Infoblox IPAM.
 
+Please note this provider is in early development and is looking for maintainers.
+
 ## Getting Started
 
 Install the provider by using the following command after changing the image tag
