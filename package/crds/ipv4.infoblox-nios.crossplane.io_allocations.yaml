@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: networkcontainers.ipv6.infoblox-nios.upbound.io
+  name: allocations.ipv4.infoblox-nios.crossplane.io
 spec:
-  group: ipv6.infoblox-nios.upbound.io
+  group: ipv4.infoblox-nios.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox-nios
-    kind: NetworkContainer
-    listKind: NetworkContainerList
-    plural: networkcontainers
-    singular: networkcontainer
+    kind: Allocation
+    listKind: AllocationList
+    plural: allocations
+    singular: allocation
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,8 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: NetworkContainer is the Schema for the NetworkContainers API.
-          <no value>
+        description: Allocation is the Schema for the Allocations API. <no value>
         properties:
           apiVersion:
             description: |-
@@ -55,7 +54,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: NetworkContainerSpec defines the desired state of NetworkContainer
+            description: AllocationSpec defines the desired state of Allocation
             properties:
               deletionPolicy:
                 default: Delete
@@ -73,28 +72,36 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  allocatePrefixLen:
-                    description: Set the parameter's value > 0 to allocate next available
-                      network container with corresponding prefix length from the
-                      network container defined by 'parent_cidr'
-                    type: number
                   cidr:
-                    description: The network container's address, in CIDR format.
+                    description: The address in cidr format.
                     type: string
                   comment:
-                    description: A description of the network container.
+                    description: A description of IP address allocation.
                     type: string
+                  dnsView:
+                    description: Dns View under which the zone has been created.
+                    type: string
+                  enableDns:
+                    description: flag that defines if the host record is to be used
+                      for DNS Purposes.
+                    type: boolean
                   extAttrs:
-                    description: The Extensible attributes of the network container
-                      to be added/updated, as a map in JSON format
+                    description: The extensible attributes for IP address allocation,
+                      as a map in JSON format
+                    type: string
+                  fqdn:
+                    description: The host name for Host Record in FQDN format.
+                    type: string
+                  ipAddr:
+                    description: IP address of cloud instance.Set a valid IP for static
+                      allocation and leave empty if dynamically allocated.
                     type: string
                   networkView:
-                    description: The name of network view for the network container.
+                    description: Network view name of NIOS server.
                     type: string
-                  parentCidr:
-                    description: The parent network container block in CIDR format
-                      to allocate from.
-                    type: string
+                  ttl:
+                    description: TTL attribute value for the record.
+                    type: number
                 type: object
               initProvider:
                 description: |-
@@ -109,28 +116,36 @@ spec:
                   for example because of an external controller is managing them, like an
                   autoscaler.
                 properties:
-                  allocatePrefixLen:
-                    description: Set the parameter's value > 0 to allocate next available
-                      network container with corresponding prefix length from the
-                      network container defined by 'parent_cidr'
-                    type: number
                   cidr:
-                    description: The network container's address, in CIDR format.
+                    description: The address in cidr format.
                     type: string
                   comment:
-                    description: A description of the network container.
+                    description: A description of IP address allocation.
                     type: string
+                  dnsView:
+                    description: Dns View under which the zone has been created.
+                    type: string
+                  enableDns:
+                    description: flag that defines if the host record is to be used
+                      for DNS Purposes.
+                    type: boolean
                   extAttrs:
-                    description: The Extensible attributes of the network container
-                      to be added/updated, as a map in JSON format
+                    description: The extensible attributes for IP address allocation,
+                      as a map in JSON format
+                    type: string
+                  fqdn:
+                    description: The host name for Host Record in FQDN format.
+                    type: string
+                  ipAddr:
+                    description: IP address of cloud instance.Set a valid IP for static
+                      allocation and leave empty if dynamically allocated.
                     type: string
                   networkView:
-                    description: The name of network view for the network container.
+                    description: Network view name of NIOS server.
                     type: string
-                  parentCidr:
-                    description: The parent network container block in CIDR format
-                      to allocate from.
-                    type: string
+                  ttl:
+                    description: TTL attribute value for the record.
+                    type: number
                 type: object
               managementPolicies:
                 default:
@@ -299,35 +314,48 @@ spec:
             required:
             - forProvider
             type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.fqdn is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.fqdn)
+                || (has(self.initProvider) && has(self.initProvider.fqdn))'
           status:
-            description: NetworkContainerStatus defines the observed state of NetworkContainer.
+            description: AllocationStatus defines the observed state of Allocation.
             properties:
               atProvider:
                 properties:
-                  allocatePrefixLen:
-                    description: Set the parameter's value > 0 to allocate next available
-                      network container with corresponding prefix length from the
-                      network container defined by 'parent_cidr'
-                    type: number
                   cidr:
-                    description: The network container's address, in CIDR format.
+                    description: The address in cidr format.
                     type: string
                   comment:
-                    description: A description of the network container.
+                    description: A description of IP address allocation.
                     type: string
+                  dnsView:
+                    description: Dns View under which the zone has been created.
+                    type: string
+                  enableDns:
+                    description: flag that defines if the host record is to be used
+                      for DNS Purposes.
+                    type: boolean
                   extAttrs:
-                    description: The Extensible attributes of the network container
-                      to be added/updated, as a map in JSON format
+                    description: The extensible attributes for IP address allocation,
+                      as a map in JSON format
+                    type: string
+                  fqdn:
+                    description: The host name for Host Record in FQDN format.
                     type: string
                   id:
                     type: string
+                  ipAddr:
+                    description: IP address of cloud instance.Set a valid IP for static
+                      allocation and leave empty if dynamically allocated.
+                    type: string
                   networkView:
-                    description: The name of network view for the network container.
+                    description: Network view name of NIOS server.
                     type: string
-                  parentCidr:
-                    description: The parent network container block in CIDR format
-                      to allocate from.
-                    type: string
+                  ttl:
+                    description: TTL attribute value for the record.
+                    type: number
                 type: object
               conditions:
                 description: Conditions of the resource.

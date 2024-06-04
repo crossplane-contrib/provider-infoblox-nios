@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: associations.ip.infoblox-nios.upbound.io
+  name: txts.dns.infoblox-nios.crossplane.io
 spec:
-  group: ip.infoblox-nios.upbound.io
+  group: dns.infoblox-nios.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox-nios
-    kind: Association
-    listKind: AssociationList
-    plural: associations
-    singular: association
+    kind: TXT
+    listKind: TXTList
+    plural: txts
+    singular: txt
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Association is the Schema for the Associations API. <no value>
+        description: TXT is the Schema for the TXTs API. <no value>
         properties:
           apiVersion:
             description: |-
@@ -54,7 +54,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: AssociationSpec defines the desired state of Association
+            description: TXTSpec defines the desired state of TXT
             properties:
               deletionPolicy:
                 default: Delete
@@ -72,20 +72,25 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  duid:
-                    description: DHCP unique identifier for IPv6.
+                  comment:
+                    description: Description of the TXT-record.
                     type: string
-                  enableDhcp:
-                    description: The flag which defines if the host record is to be
-                      used for IPAM purposes.
-                    type: boolean
-                  internalId:
-                    description: This value must point to the ID of the appropriate
-                      allocation resource. Required on resource creation.
+                  dnsView:
+                    description: DNS view in which the record's zone exists.
                     type: string
-                  macAddr:
-                    description: MAC address of a cloud instance.
+                  extAttrs:
+                    description: Extensible attributes of the TXT-record to be added/updated,
+                      as a map in JSON format
                     type: string
+                  fqdn:
+                    description: FQDN for the TXT-Record.
+                    type: string
+                  text:
+                    description: Data to be associated with TXT_Record.
+                    type: string
+                  ttl:
+                    description: TTL value of the TXT-Record
+                    type: number
                 type: object
               initProvider:
                 description: |-
@@ -100,20 +105,25 @@ spec:
                   for example because of an external controller is managing them, like an
                   autoscaler.
                 properties:
-                  duid:
-                    description: DHCP unique identifier for IPv6.
+                  comment:
+                    description: Description of the TXT-record.
                     type: string
-                  enableDhcp:
-                    description: The flag which defines if the host record is to be
-                      used for IPAM purposes.
-                    type: boolean
-                  internalId:
-                    description: This value must point to the ID of the appropriate
-                      allocation resource. Required on resource creation.
+                  dnsView:
+                    description: DNS view in which the record's zone exists.
                     type: string
-                  macAddr:
-                    description: MAC address of a cloud instance.
+                  extAttrs:
+                    description: Extensible attributes of the TXT-record to be added/updated,
+                      as a map in JSON format
                     type: string
+                  fqdn:
+                    description: FQDN for the TXT-Record.
+                    type: string
+                  text:
+                    description: Data to be associated with TXT_Record.
+                    type: string
+                  ttl:
+                    description: TTL value of the TXT-Record
+                    type: number
                 type: object
               managementPolicies:
                 default:
@@ -282,30 +292,37 @@ spec:
             required:
             - forProvider
             type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.fqdn is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.fqdn)
+                || (has(self.initProvider) && has(self.initProvider.fqdn))'
           status:
-            description: AssociationStatus defines the observed state of Association.
+            description: TXTStatus defines the observed state of TXT.
             properties:
               atProvider:
                 properties:
-                  duid:
-                    description: DHCP unique identifier for IPv6.
+                  comment:
+                    description: Description of the TXT-record.
                     type: string
-                  enableDhcp:
-                    description: The flag which defines if the host record is to be
-                      used for IPAM purposes.
-                    type: boolean
+                  dnsView:
+                    description: DNS view in which the record's zone exists.
+                    type: string
+                  extAttrs:
+                    description: Extensible attributes of the TXT-record to be added/updated,
+                      as a map in JSON format
+                    type: string
+                  fqdn:
+                    description: FQDN for the TXT-Record.
+                    type: string
                   id:
                     type: string
-                  internalId:
-                    description: This value must point to the ID of the appropriate
-                      allocation resource. Required on resource creation.
+                  text:
+                    description: Data to be associated with TXT_Record.
                     type: string
-                  macAddr:
-                    description: MAC address of a cloud instance.
-                    type: string
-                  ref:
-                    description: NIOS object's reference, not to be set by a user.
-                    type: string
+                  ttl:
+                    description: TTL value of the TXT-Record
+                    type: number
                 type: object
               conditions:
                 description: Conditions of the resource.

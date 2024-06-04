@@ -2,3 +2,43 @@ apiVersion: meta.pkg.crossplane.io/v1alpha1
 kind: Provider
 metadata:
   name: provider-infoblox-nios
+  meta.crossplane.io/maintainer: Crossplane Maintainers <info@crossplane.io>
+  meta.crossplane.io/source: github.com/crossplane-contrib/provider-infoblox-nios
+  meta.crossplane.io/license: Apache-2.0
+  friendly-name.meta.crossplane.io: Provider Infoblox NIOS
+  meta.crossplane.io/description: |
+    This provider enables management of Infoblox IPAM resources.
+  meta.crossplane.io/readme: |
+    This provider enables management of Infoblox IPAM resources.
+
+    Notes from the Terraform Provider:
+    
+    Network and network container resources have two versions: IPv4 and IPv6.
+    In addition, there are two operations which are implemented as resources:
+    IP address allocation and IP address association with a network host (ex.
+    VM in a cloud environment); they have three versions: IPv4 and IPv6
+    separately, and IPv4/IPv6 combined.
+
+    The recommendation is to avoid using separate IPv4 and IPv6 versions of IP
+    allocation and IP association resources. This recommendation does not
+    relate to network container and network-related resources.
+
+    To work with DNS records a user must ensure that appropriate DNS zones
+    exist on the NIOS side, because currently the plugin does not support
+    creating a DNS zone.
+
+    Every resource has common attributes: 'comment' and 'extAttrs'. 'comment'
+    is text which describes the resource. 'extAttrs' is a set of NIOS
+    Extensible Attributes attached to the resource.
+
+    For DNS-related resources there is 'ttl' attribute as well, it specifies
+    TTL value (in seconds) for appropriate record. There is no default value,
+    zone's TTL is used by NIOS, if the value is omitted. In this case, the
+    field 'ttl' will be set to a negative value in the Terraform's state for
+    the resource, just to indicate the absence of a value. TTL value of 0
+    (zero) means caching should be disabled for this record. Please note that
+    anywhere in the documents about this plugin, the default DNS view or the
+    default network view means: a view with the name default. Usually, this is
+    the name for the view which is marked as the default view on NIOS side,
+    but this may be overridden. But the plugin does use the name default for
+    the view, despite which view is marked as the default on NIOS side.

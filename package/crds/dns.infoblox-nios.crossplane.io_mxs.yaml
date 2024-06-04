@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: allocations.ipv4.infoblox-nios.upbound.io
+  name: mxs.dns.infoblox-nios.crossplane.io
 spec:
-  group: ipv4.infoblox-nios.upbound.io
+  group: dns.infoblox-nios.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox-nios
-    kind: Allocation
-    listKind: AllocationList
-    plural: allocations
-    singular: allocation
+    kind: MX
+    listKind: MXList
+    plural: mxs
+    singular: mx
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Allocation is the Schema for the Allocations API. <no value>
+        description: MX is the Schema for the MXs API. <no value>
         properties:
           apiVersion:
             description: |-
@@ -54,7 +54,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: AllocationSpec defines the desired state of Allocation
+            description: MXSpec defines the desired state of MX
             properties:
               deletionPolicy:
                 default: Delete
@@ -72,35 +72,27 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  cidr:
-                    description: The address in cidr format.
-                    type: string
                   comment:
-                    description: A description of IP address allocation.
+                    description: Description of the MX-Record.
                     type: string
                   dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: DNS view which the zone does exist within
                     type: string
-                  enableDns:
-                    description: flag that defines if the host record is to be used
-                      for DNS Purposes.
-                    type: boolean
                   extAttrs:
-                    description: The extensible attributes for IP address allocation,
-                      as a map in JSON format
+                    description: Extensible attributes of the MX-record to be added/updated,
+                      as a map in JSON format.
                     type: string
                   fqdn:
-                    description: The host name for Host Record in FQDN format.
+                    description: FQDN for the MX-record.
                     type: string
-                  ipAddr:
-                    description: IP address of cloud instance.Set a valid IP for static
-                      allocation and leave empty if dynamically allocated.
+                  mailExchanger:
+                    description: A record used to specify mail server.
                     type: string
-                  networkView:
-                    description: Network view name of NIOS server.
-                    type: string
+                  preference:
+                    description: Configures the preference (0-65535) for this MX-record.
+                    type: number
                   ttl:
-                    description: TTL attribute value for the record.
+                    description: TTL value for the MX-record.
                     type: number
                 type: object
               initProvider:
@@ -116,35 +108,27 @@ spec:
                   for example because of an external controller is managing them, like an
                   autoscaler.
                 properties:
-                  cidr:
-                    description: The address in cidr format.
-                    type: string
                   comment:
-                    description: A description of IP address allocation.
+                    description: Description of the MX-Record.
                     type: string
                   dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: DNS view which the zone does exist within
                     type: string
-                  enableDns:
-                    description: flag that defines if the host record is to be used
-                      for DNS Purposes.
-                    type: boolean
                   extAttrs:
-                    description: The extensible attributes for IP address allocation,
-                      as a map in JSON format
+                    description: Extensible attributes of the MX-record to be added/updated,
+                      as a map in JSON format.
                     type: string
                   fqdn:
-                    description: The host name for Host Record in FQDN format.
+                    description: FQDN for the MX-record.
                     type: string
-                  ipAddr:
-                    description: IP address of cloud instance.Set a valid IP for static
-                      allocation and leave empty if dynamically allocated.
+                  mailExchanger:
+                    description: A record used to specify mail server.
                     type: string
-                  networkView:
-                    description: Network view name of NIOS server.
-                    type: string
+                  preference:
+                    description: Configures the preference (0-65535) for this MX-record.
+                    type: number
                   ttl:
-                    description: TTL attribute value for the record.
+                    description: TTL value for the MX-record.
                     type: number
                 type: object
               managementPolicies:
@@ -319,42 +303,42 @@ spec:
               rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
                 || ''Update'' in self.managementPolicies) || has(self.forProvider.fqdn)
                 || (has(self.initProvider) && has(self.initProvider.fqdn))'
+            - message: spec.forProvider.mailExchanger is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.mailExchanger)
+                || (has(self.initProvider) && has(self.initProvider.mailExchanger))'
+            - message: spec.forProvider.preference is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.preference)
+                || (has(self.initProvider) && has(self.initProvider.preference))'
           status:
-            description: AllocationStatus defines the observed state of Allocation.
+            description: MXStatus defines the observed state of MX.
             properties:
               atProvider:
                 properties:
-                  cidr:
-                    description: The address in cidr format.
-                    type: string
                   comment:
-                    description: A description of IP address allocation.
+                    description: Description of the MX-Record.
                     type: string
                   dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: DNS view which the zone does exist within
                     type: string
-                  enableDns:
-                    description: flag that defines if the host record is to be used
-                      for DNS Purposes.
-                    type: boolean
                   extAttrs:
-                    description: The extensible attributes for IP address allocation,
-                      as a map in JSON format
+                    description: Extensible attributes of the MX-record to be added/updated,
+                      as a map in JSON format.
                     type: string
                   fqdn:
-                    description: The host name for Host Record in FQDN format.
+                    description: FQDN for the MX-record.
                     type: string
                   id:
                     type: string
-                  ipAddr:
-                    description: IP address of cloud instance.Set a valid IP for static
-                      allocation and leave empty if dynamically allocated.
+                  mailExchanger:
+                    description: A record used to specify mail server.
                     type: string
-                  networkView:
-                    description: Network view name of NIOS server.
-                    type: string
+                  preference:
+                    description: Configures the preference (0-65535) for this MX-record.
+                    type: number
                   ttl:
-                    description: TTL attribute value for the record.
+                    description: TTL value for the MX-record.
                     type: number
                 type: object
               conditions:
