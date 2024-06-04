@@ -32,6 +32,7 @@ import (
 
 const (
 	resourcePrefix = "infoblox-nios"
+	rootGroup      = resourcePrefix + "." + "crossplane.io"
 	modulePath     = "github.com/crossplane-contrib/provider-infoblox-nios"
 )
 
@@ -44,6 +45,7 @@ var providerMetadata string
 // GetProvider returns provider configuration
 func GetProvider() *ujconfig.Provider {
 	pc := ujconfig.NewProvider([]byte(providerSchema), resourcePrefix, modulePath, []byte(providerMetadata),
+		ujconfig.WithRootGroup(rootGroup),
 		ujconfig.WithIncludeList(ExternalNameConfigured()),
 		ujconfig.WithFeaturesPackage("internal/features"),
 		ujconfig.WithDefaultResourceOptions(

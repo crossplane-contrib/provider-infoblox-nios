@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: allocations.ip.infoblox-nios.upbound.io
+  name: aaaas.dns.infoblox-nios.crossplane.io
 spec:
-  group: ip.infoblox-nios.upbound.io
+  group: dns.infoblox-nios.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox-nios
-    kind: Allocation
-    listKind: AllocationList
-    plural: allocations
-    singular: allocation
+    kind: AAAA
+    listKind: AAAAList
+    plural: aaaas
+    singular: aaaa
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Allocation is the Schema for the Allocations API. <no value>
+        description: AAAA is the Schema for the AAAAs API. <no value>
         properties:
           apiVersion:
             description: |-
@@ -54,7 +54,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: AllocationSpec defines the desired state of Allocation
+            description: AAAASpec defines the desired state of AAAA
             properties:
               deletionPolicy:
                 default: Delete
@@ -72,49 +72,30 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  allocatedIpv4Addr:
-                    description: Value which comes from 'ipv4_addr' (if specified)
-                      or from auto-allocation function (using 'ipv4_cidr').
-                    type: string
-                  allocatedIpv6Addr:
-                    description: Value which comes from 'ipv6_addr' (if specified)
-                      or from auto-allocation function (using 'ipv6_cidr').
+                  cidr:
+                    description: The network address in cidr format under which record
+                      has to be created.
                     type: string
                   comment:
-                    description: A description of IP address allocation.
+                    description: A description about AAAA record.
                     type: string
                   dnsView:
-                    description: DNS view under which the zone has been created.
+                    description: Dns View under which the zone has been created.
                     type: string
-                  enableDns:
-                    description: flag that defines if the host record is to be used
-                      for DNS purposes.
-                    type: boolean
                   extAttrs:
-                    description: The extensible attributes for IP address allocation,
+                    description: The Extensible attributes of AAAA record to be added/updated,
                       as a map in JSON format
                     type: string
                   fqdn:
-                    description: The host name for Host Record in FQDN format.
-                    type: string
-                  ipv4Addr:
-                    description: IPv4 address of cloud instance.Set a valid IP address
-                      for static allocation and leave empty if dynamically allocated.
-                    type: string
-                  ipv4Cidr:
-                    description: The IPv4 cidr from which an IPv4 address will be
-                      allocated.
+                    description: The name of the AAAA record in FQDN format.
                     type: string
                   ipv6Addr:
-                    description: IPv6 address of cloud instance.Set a valid IP address
-                      for static allocation and leave empty if dynamically allocated.
-                    type: string
-                  ipv6Cidr:
-                    description: The IPv6 cidr from which an IPv6 address will be
-                      allocated.
+                    description: IPv6 address for record creation. Set the field with
+                      valid IP for static allocation. If to be dynamically allocated
+                      set cidr field
                     type: string
                   networkView:
-                    description: network view name on NIOS server.
+                    description: Network view name of NIOS server.
                     type: string
                   ttl:
                     description: TTL attribute value for the record.
@@ -133,49 +114,30 @@ spec:
                   for example because of an external controller is managing them, like an
                   autoscaler.
                 properties:
-                  allocatedIpv4Addr:
-                    description: Value which comes from 'ipv4_addr' (if specified)
-                      or from auto-allocation function (using 'ipv4_cidr').
-                    type: string
-                  allocatedIpv6Addr:
-                    description: Value which comes from 'ipv6_addr' (if specified)
-                      or from auto-allocation function (using 'ipv6_cidr').
+                  cidr:
+                    description: The network address in cidr format under which record
+                      has to be created.
                     type: string
                   comment:
-                    description: A description of IP address allocation.
+                    description: A description about AAAA record.
                     type: string
                   dnsView:
-                    description: DNS view under which the zone has been created.
+                    description: Dns View under which the zone has been created.
                     type: string
-                  enableDns:
-                    description: flag that defines if the host record is to be used
-                      for DNS purposes.
-                    type: boolean
                   extAttrs:
-                    description: The extensible attributes for IP address allocation,
+                    description: The Extensible attributes of AAAA record to be added/updated,
                       as a map in JSON format
                     type: string
                   fqdn:
-                    description: The host name for Host Record in FQDN format.
-                    type: string
-                  ipv4Addr:
-                    description: IPv4 address of cloud instance.Set a valid IP address
-                      for static allocation and leave empty if dynamically allocated.
-                    type: string
-                  ipv4Cidr:
-                    description: The IPv4 cidr from which an IPv4 address will be
-                      allocated.
+                    description: The name of the AAAA record in FQDN format.
                     type: string
                   ipv6Addr:
-                    description: IPv6 address of cloud instance.Set a valid IP address
-                      for static allocation and leave empty if dynamically allocated.
-                    type: string
-                  ipv6Cidr:
-                    description: The IPv6 cidr from which an IPv6 address will be
-                      allocated.
+                    description: IPv6 address for record creation. Set the field with
+                      valid IP for static allocation. If to be dynamically allocated
+                      set cidr field
                     type: string
                   networkView:
-                    description: network view name on NIOS server.
+                    description: Network view name of NIOS server.
                     type: string
                   ttl:
                     description: TTL attribute value for the record.
@@ -354,60 +316,36 @@ spec:
                 || ''Update'' in self.managementPolicies) || has(self.forProvider.fqdn)
                 || (has(self.initProvider) && has(self.initProvider.fqdn))'
           status:
-            description: AllocationStatus defines the observed state of Allocation.
+            description: AAAAStatus defines the observed state of AAAA.
             properties:
               atProvider:
                 properties:
-                  allocatedIpv4Addr:
-                    description: Value which comes from 'ipv4_addr' (if specified)
-                      or from auto-allocation function (using 'ipv4_cidr').
-                    type: string
-                  allocatedIpv6Addr:
-                    description: Value which comes from 'ipv6_addr' (if specified)
-                      or from auto-allocation function (using 'ipv6_cidr').
+                  cidr:
+                    description: The network address in cidr format under which record
+                      has to be created.
                     type: string
                   comment:
-                    description: A description of IP address allocation.
+                    description: A description about AAAA record.
                     type: string
                   dnsView:
-                    description: DNS view under which the zone has been created.
+                    description: Dns View under which the zone has been created.
                     type: string
-                  enableDns:
-                    description: flag that defines if the host record is to be used
-                      for DNS purposes.
-                    type: boolean
                   extAttrs:
-                    description: The extensible attributes for IP address allocation,
+                    description: The Extensible attributes of AAAA record to be added/updated,
                       as a map in JSON format
                     type: string
                   fqdn:
-                    description: The host name for Host Record in FQDN format.
+                    description: The name of the AAAA record in FQDN format.
                     type: string
                   id:
                     type: string
-                  internalId:
-                    type: string
-                  ipv4Addr:
-                    description: IPv4 address of cloud instance.Set a valid IP address
-                      for static allocation and leave empty if dynamically allocated.
-                    type: string
-                  ipv4Cidr:
-                    description: The IPv4 cidr from which an IPv4 address will be
-                      allocated.
-                    type: string
                   ipv6Addr:
-                    description: IPv6 address of cloud instance.Set a valid IP address
-                      for static allocation and leave empty if dynamically allocated.
-                    type: string
-                  ipv6Cidr:
-                    description: The IPv6 cidr from which an IPv6 address will be
-                      allocated.
+                    description: IPv6 address for record creation. Set the field with
+                      valid IP for static allocation. If to be dynamically allocated
+                      set cidr field
                     type: string
                   networkView:
-                    description: network view name on NIOS server.
-                    type: string
-                  ref:
-                    description: NIOS object's reference, not to be set by a user.
+                    description: Network view name of NIOS server.
                     type: string
                   ttl:
                     description: TTL attribute value for the record.

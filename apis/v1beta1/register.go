@@ -13,7 +13,7 @@ import (
 
 // Package type metadata.
 const (
-	Group   = "infoblox-nios.upbound.io"
+	Group   = "infoblox-nios.crossplane.io"
 	Version = "v1beta1"
 )
 

@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: cnames.dns.infoblox-nios.upbound.io
+  name: views.network.infoblox-nios.crossplane.io
 spec:
-  group: dns.infoblox-nios.upbound.io
+  group: network.infoblox-nios.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox-nios
-    kind: CNAME
-    listKind: CNAMEList
-    plural: cnames
-    singular: cname
+    kind: View
+    listKind: ViewList
+    plural: views
+    singular: view
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: CNAME is the Schema for the CNAMEs API. <no value>
+        description: View is the Schema for the Views API. <no value>
         properties:
           apiVersion:
             description: |-
@@ -54,7 +54,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: CNAMESpec defines the desired state of CNAME
+            description: ViewSpec defines the desired state of View
             properties:
               deletionPolicy:
                 default: Delete
@@ -72,25 +72,13 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  alias:
-                    description: The alias name in FQDN format.
-                    type: string
-                  canonical:
-                    description: The Canonical name in FQDN format.
-                    type: string
                   comment:
-                    description: A description about CNAME record.
-                    type: string
-                  dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: A description of the network view.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of CNAME record, as a map
-                      in JSON format
+                    description: The Extensible attributes of the network container
+                      to be added/updated, as a map in JSON format
                     type: string
-                  ttl:
-                    description: TTL attribute value for the record.
-                    type: number
                 type: object
               initProvider:
                 description: |-
@@ -105,25 +93,13 @@ spec:
                   for example because of an external controller is managing them, like an
                   autoscaler.
                 properties:
-                  alias:
-                    description: The alias name in FQDN format.
-                    type: string
-                  canonical:
-                    description: The Canonical name in FQDN format.
-                    type: string
                   comment:
-                    description: A description about CNAME record.
-                    type: string
-                  dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: A description of the network view.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of CNAME record, as a map
-                      in JSON format
+                    description: The Extensible attributes of the network container
+                      to be added/updated, as a map in JSON format
                     type: string
-                  ttl:
-                    description: TTL attribute value for the record.
-                    type: number
                 type: object
               managementPolicies:
                 default:
@@ -292,41 +268,20 @@ spec:
             required:
             - forProvider
             type: object
-            x-kubernetes-validations:
-            - message: spec.forProvider.alias is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.alias)
-                || (has(self.initProvider) && has(self.initProvider.alias))'
-            - message: spec.forProvider.canonical is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.canonical)
-                || (has(self.initProvider) && has(self.initProvider.canonical))'
           status:
-            description: CNAMEStatus defines the observed state of CNAME.
+            description: ViewStatus defines the observed state of View.
             properties:
               atProvider:
                 properties:
-                  alias:
-                    description: The alias name in FQDN format.
-                    type: string
-                  canonical:
-                    description: The Canonical name in FQDN format.
-                    type: string
                   comment:
-                    description: A description about CNAME record.
-                    type: string
-                  dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: A description of the network view.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of CNAME record, as a map
-                      in JSON format
+                    description: The Extensible attributes of the network container
+                      to be added/updated, as a map in JSON format
                     type: string
                   id:
                     type: string
-                  ttl:
-                    description: TTL attribute value for the record.
-                    type: number
                 type: object
               conditions:
                 description: Conditions of the resource.

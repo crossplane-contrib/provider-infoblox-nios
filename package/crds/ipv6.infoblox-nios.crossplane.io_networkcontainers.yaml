@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: views.network.infoblox-nios.upbound.io
+  name: networkcontainers.ipv6.infoblox-nios.crossplane.io
 spec:
-  group: network.infoblox-nios.upbound.io
+  group: ipv6.infoblox-nios.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox-nios
-    kind: View
-    listKind: ViewList
-    plural: views
-    singular: view
+    kind: NetworkContainer
+    listKind: NetworkContainerList
+    plural: networkcontainers
+    singular: networkcontainer
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,8 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: View is the Schema for the Views API. <no value>
+        description: NetworkContainer is the Schema for the NetworkContainers API.
+          <no value>
         properties:
           apiVersion:
             description: |-
@@ -54,7 +55,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: ViewSpec defines the desired state of View
+            description: NetworkContainerSpec defines the desired state of NetworkContainer
             properties:
               deletionPolicy:
                 default: Delete
@@ -72,12 +73,27 @@ spec:
                 type: string
               forProvider:
                 properties:
+                  allocatePrefixLen:
+                    description: Set the parameter's value > 0 to allocate next available
+                      network container with corresponding prefix length from the
+                      network container defined by 'parent_cidr'
+                    type: number
+                  cidr:
+                    description: The network container's address, in CIDR format.
+                    type: string
                   comment:
-                    description: A description of the network view.
+                    description: A description of the network container.
                     type: string
                   extAttrs:
                     description: The Extensible attributes of the network container
                       to be added/updated, as a map in JSON format
+                    type: string
+                  networkView:
+                    description: The name of network view for the network container.
+                    type: string
+                  parentCidr:
+                    description: The parent network container block in CIDR format
+                      to allocate from.
                     type: string
                 type: object
               initProvider:
@@ -93,12 +109,27 @@ spec:
                   for example because of an external controller is managing them, like an
                   autoscaler.
                 properties:
+                  allocatePrefixLen:
+                    description: Set the parameter's value > 0 to allocate next available
+                      network container with corresponding prefix length from the
+                      network container defined by 'parent_cidr'
+                    type: number
+                  cidr:
+                    description: The network container's address, in CIDR format.
+                    type: string
                   comment:
-                    description: A description of the network view.
+                    description: A description of the network container.
                     type: string
                   extAttrs:
                     description: The Extensible attributes of the network container
                       to be added/updated, as a map in JSON format
+                    type: string
+                  networkView:
+                    description: The name of network view for the network container.
+                    type: string
+                  parentCidr:
+                    description: The parent network container block in CIDR format
+                      to allocate from.
                     type: string
                 type: object
               managementPolicies:
@@ -269,18 +300,33 @@ spec:
             - forProvider
             type: object
           status:
-            description: ViewStatus defines the observed state of View.
+            description: NetworkContainerStatus defines the observed state of NetworkContainer.
             properties:
               atProvider:
                 properties:
+                  allocatePrefixLen:
+                    description: Set the parameter's value > 0 to allocate next available
+                      network container with corresponding prefix length from the
+                      network container defined by 'parent_cidr'
+                    type: number
+                  cidr:
+                    description: The network container's address, in CIDR format.
+                    type: string
                   comment:
-                    description: A description of the network view.
+                    description: A description of the network container.
                     type: string
                   extAttrs:
                     description: The Extensible attributes of the network container
                       to be added/updated, as a map in JSON format
                     type: string
                   id:
+                    type: string
+                  networkView:
+                    description: The name of network view for the network container.
+                    type: string
+                  parentCidr:
+                    description: The parent network container block in CIDR format
+                      to allocate from.
                     type: string
                 type: object
               conditions:

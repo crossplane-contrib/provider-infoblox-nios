@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: associations.ipv6.infoblox-nios.upbound.io
+  name: ptrs.dns.infoblox-nios.crossplane.io
 spec:
-  group: ipv6.infoblox-nios.upbound.io
+  group: dns.infoblox-nios.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox-nios
-    kind: Association
-    listKind: AssociationList
-    plural: associations
-    singular: association
+    kind: PTR
+    listKind: PTRList
+    plural: ptrs
+    singular: ptr
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Association is the Schema for the Associations API. <no value>
+        description: PTR is the Schema for the PTRs API. <no value>
         properties:
           apiVersion:
             description: |-
@@ -54,7 +54,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: AssociationSpec defines the desired state of Association
+            description: PTRSpec defines the desired state of PTR
             properties:
               deletionPolicy:
                 default: Delete
@@ -73,40 +73,33 @@ spec:
               forProvider:
                 properties:
                   cidr:
-                    description: The address in cidr format.
+                    description: The network address in cidr format under which record
+                      has to be created.
                     type: string
                   comment:
-                    description: A description of the IP association.
+                    description: A description about PTR record.
                     type: string
                   dnsView:
-                    description: view in which record has to be created.
+                    description: Dns View under which the zone has been created.
                     type: string
-                  duid:
-                    description: DHCP unique identifier for IPv6.
-                    type: string
-                  enableDhcp:
-                    description: flag that defines if the host record is to be used
-                      for IPAM Purposes.
-                    type: boolean
-                  enableDns:
-                    description: flag that defines if the host record is to be used
-                      for DNS Purposes
-                    type: boolean
                   extAttrs:
-                    description: The Extensible attributes for IP Association, as
-                      a map in JSON format
-                    type: string
-                  fqdn:
-                    description: The host name for Host Record in FQDN format.
+                    description: The Extensible attributes of PTR record to be added/updated,
+                      as a map in JSON format
                     type: string
                   ipAddr:
-                    description: IP address of cloud instance.
-                    type: string
-                  macAddr:
-                    description: mac address of cloud instance.
+                    description: IPv4/IPv6 address for record creation. Set the field
+                      with valid IP for static allocation. If to be dynamically allocated
+                      set cidr field
                     type: string
                   networkView:
                     description: Network view name of NIOS server.
+                    type: string
+                  ptrdname:
+                    description: The domain name in FQDN to which the record should
+                      point to.
+                    type: string
+                  recordName:
+                    description: The name of the DNS PTR record in FQDN format
                     type: string
                   ttl:
                     description: TTL attribute value for the record.
@@ -126,40 +119,33 @@ spec:
                   autoscaler.
                 properties:
                   cidr:
-                    description: The address in cidr format.
+                    description: The network address in cidr format under which record
+                      has to be created.
                     type: string
                   comment:
-                    description: A description of the IP association.
+                    description: A description about PTR record.
                     type: string
                   dnsView:
-                    description: view in which record has to be created.
+                    description: Dns View under which the zone has been created.
                     type: string
-                  duid:
-                    description: DHCP unique identifier for IPv6.
-                    type: string
-                  enableDhcp:
-                    description: flag that defines if the host record is to be used
-                      for IPAM Purposes.
-                    type: boolean
-                  enableDns:
-                    description: flag that defines if the host record is to be used
-                      for DNS Purposes
-                    type: boolean
                   extAttrs:
-                    description: The Extensible attributes for IP Association, as
-                      a map in JSON format
-                    type: string
-                  fqdn:
-                    description: The host name for Host Record in FQDN format.
+                    description: The Extensible attributes of PTR record to be added/updated,
+                      as a map in JSON format
                     type: string
                   ipAddr:
-                    description: IP address of cloud instance.
-                    type: string
-                  macAddr:
-                    description: mac address of cloud instance.
+                    description: IPv4/IPv6 address for record creation. Set the field
+                      with valid IP for static allocation. If to be dynamically allocated
+                      set cidr field
                     type: string
                   networkView:
                     description: Network view name of NIOS server.
+                    type: string
+                  ptrdname:
+                    description: The domain name in FQDN to which the record should
+                      point to.
+                    type: string
+                  recordName:
+                    description: The name of the DNS PTR record in FQDN format
                     type: string
                   ttl:
                     description: TTL attribute value for the record.
@@ -333,56 +319,45 @@ spec:
             - forProvider
             type: object
             x-kubernetes-validations:
-            - message: spec.forProvider.fqdn is a required parameter
+            - message: spec.forProvider.ptrdname is a required parameter
               rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.fqdn)
-                || (has(self.initProvider) && has(self.initProvider.fqdn))'
-            - message: spec.forProvider.ipAddr is a required parameter
-              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.ipAddr)
-                || (has(self.initProvider) && has(self.initProvider.ipAddr))'
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.ptrdname)
+                || (has(self.initProvider) && has(self.initProvider.ptrdname))'
           status:
-            description: AssociationStatus defines the observed state of Association.
+            description: PTRStatus defines the observed state of PTR.
             properties:
               atProvider:
                 properties:
                   cidr:
-                    description: The address in cidr format.
+                    description: The network address in cidr format under which record
+                      has to be created.
                     type: string
                   comment:
-                    description: A description of the IP association.
+                    description: A description about PTR record.
                     type: string
                   dnsView:
-                    description: view in which record has to be created.
+                    description: Dns View under which the zone has been created.
                     type: string
-                  duid:
-                    description: DHCP unique identifier for IPv6.
-                    type: string
-                  enableDhcp:
-                    description: flag that defines if the host record is to be used
-                      for IPAM Purposes.
-                    type: boolean
-                  enableDns:
-                    description: flag that defines if the host record is to be used
-                      for DNS Purposes
-                    type: boolean
                   extAttrs:
-                    description: The Extensible attributes for IP Association, as
-                      a map in JSON format
-                    type: string
-                  fqdn:
-                    description: The host name for Host Record in FQDN format.
+                    description: The Extensible attributes of PTR record to be added/updated,
+                      as a map in JSON format
                     type: string
                   id:
                     type: string
                   ipAddr:
-                    description: IP address of cloud instance.
-                    type: string
-                  macAddr:
-                    description: mac address of cloud instance.
+                    description: IPv4/IPv6 address for record creation. Set the field
+                      with valid IP for static allocation. If to be dynamically allocated
+                      set cidr field
                     type: string
                   networkView:
                     description: Network view name of NIOS server.
+                    type: string
+                  ptrdname:
+                    description: The domain name in FQDN to which the record should
+                      point to.
+                    type: string
+                  recordName:
+                    description: The name of the DNS PTR record in FQDN format
                     type: string
                   ttl:
                     description: TTL attribute value for the record.

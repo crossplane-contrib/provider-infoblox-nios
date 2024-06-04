@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: networks.ipv6.infoblox-nios.upbound.io
+  name: associations.ip.infoblox-nios.crossplane.io
 spec:
-  group: ipv6.infoblox-nios.upbound.io
+  group: ip.infoblox-nios.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox-nios
-    kind: Network
-    listKind: NetworkList
-    plural: networks
-    singular: network
+    kind: Association
+    listKind: AssociationList
+    plural: associations
+    singular: association
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Network is the Schema for the Networks API. <no value>
+        description: Association is the Schema for the Associations API. <no value>
         properties:
           apiVersion:
             description: |-
@@ -54,7 +54,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: NetworkSpec defines the desired state of Network
+            description: AssociationSpec defines the desired state of Association
             properties:
               deletionPolicy:
                 default: Delete
@@ -72,39 +72,20 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  allocatePrefixLen:
-                    description: Set the parameter's value > 0 to allocate next available
-                      network with corresponding prefix length from the network container
-                      defined by 'parent_cidr'
-                    type: number
-                  cidr:
-                    description: The network block in cidr format.
+                  duid:
+                    description: DHCP unique identifier for IPv6.
                     type: string
-                  comment:
-                    description: A string describing the network
+                  enableDhcp:
+                    description: The flag which defines if the host record is to be
+                      used for IPAM purposes.
+                    type: boolean
+                  internalId:
+                    description: This value must point to the ID of the appropriate
+                      allocation resource. Required on resource creation.
                     type: string
-                  extAttrs:
-                    description: The Extensible attributes of the Network, as a map
-                      in JSON format
+                  macAddr:
+                    description: MAC address of a cloud instance.
                     type: string
-                  gateway:
-                    description: Gateway's IP address of the network. By default,
-                      the first IP address is set as gateway address; if the value
-                      is 'none' then the network has no gateway.
-                    type: string
-                  networkView:
-                    description: Network view name available in NIOS Server.
-                    type: string
-                  parentCidr:
-                    description: The parent network container block in cidr format
-                      to allocate from.
-                    type: string
-                  reserveIp:
-                    description: The number of IP's you want to reserve in IPv4 Network.
-                    type: number
-                  reserveIpv6:
-                    description: The number of IP's you want to reserve in IPv6 Network
-                    type: number
                 type: object
               initProvider:
                 description: |-
@@ -119,39 +100,20 @@ spec:
                   for example because of an external controller is managing them, like an
                   autoscaler.
                 properties:
-                  allocatePrefixLen:
-                    description: Set the parameter's value > 0 to allocate next available
-                      network with corresponding prefix length from the network container
-                      defined by 'parent_cidr'
-                    type: number
-                  cidr:
-                    description: The network block in cidr format.
+                  duid:
+                    description: DHCP unique identifier for IPv6.
                     type: string
-                  comment:
-                    description: A string describing the network
+                  enableDhcp:
+                    description: The flag which defines if the host record is to be
+                      used for IPAM purposes.
+                    type: boolean
+                  internalId:
+                    description: This value must point to the ID of the appropriate
+                      allocation resource. Required on resource creation.
                     type: string
-                  extAttrs:
-                    description: The Extensible attributes of the Network, as a map
-                      in JSON format
+                  macAddr:
+                    description: MAC address of a cloud instance.
                     type: string
-                  gateway:
-                    description: Gateway's IP address of the network. By default,
-                      the first IP address is set as gateway address; if the value
-                      is 'none' then the network has no gateway.
-                    type: string
-                  networkView:
-                    description: Network view name available in NIOS Server.
-                    type: string
-                  parentCidr:
-                    description: The parent network container block in cidr format
-                      to allocate from.
-                    type: string
-                  reserveIp:
-                    description: The number of IP's you want to reserve in IPv4 Network.
-                    type: number
-                  reserveIpv6:
-                    description: The number of IP's you want to reserve in IPv6 Network
-                    type: number
                 type: object
               managementPolicies:
                 default:
@@ -321,45 +283,29 @@ spec:
             - forProvider
             type: object
           status:
-            description: NetworkStatus defines the observed state of Network.
+            description: AssociationStatus defines the observed state of Association.
             properties:
               atProvider:
                 properties:
-                  allocatePrefixLen:
-                    description: Set the parameter's value > 0 to allocate next available
-                      network with corresponding prefix length from the network container
-                      defined by 'parent_cidr'
-                    type: number
-                  cidr:
-                    description: The network block in cidr format.
+                  duid:
+                    description: DHCP unique identifier for IPv6.
                     type: string
-                  comment:
-                    description: A string describing the network
-                    type: string
-                  extAttrs:
-                    description: The Extensible attributes of the Network, as a map
-                      in JSON format
-                    type: string
-                  gateway:
-                    description: Gateway's IP address of the network. By default,
-                      the first IP address is set as gateway address; if the value
-                      is 'none' then the network has no gateway.
-                    type: string
+                  enableDhcp:
+                    description: The flag which defines if the host record is to be
+                      used for IPAM purposes.
+                    type: boolean
                   id:
                     type: string
-                  networkView:
-                    description: Network view name available in NIOS Server.
+                  internalId:
+                    description: This value must point to the ID of the appropriate
+                      allocation resource. Required on resource creation.
                     type: string
-                  parentCidr:
-                    description: The parent network container block in cidr format
-                      to allocate from.
+                  macAddr:
+                    description: MAC address of a cloud instance.
                     type: string
-                  reserveIp:
-                    description: The number of IP's you want to reserve in IPv4 Network.
-                    type: number
-                  reserveIpv6:
-                    description: The number of IP's you want to reserve in IPv6 Network
-                    type: number
+                  ref:
+                    description: NIOS object's reference, not to be set by a user.
+                    type: string
                 type: object
               conditions:
                 description: Conditions of the resource.

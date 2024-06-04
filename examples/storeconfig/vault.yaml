@@ -1,4 +1,4 @@
-apiVersion: infoblox-nios.upbound.io/v1alpha1
+apiVersion: infoblox-nios.crossplane.io/v1alpha1
 kind: StoreConfig
 metadata:
   name: vault

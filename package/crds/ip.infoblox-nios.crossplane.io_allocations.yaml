@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: txts.dns.infoblox-nios.upbound.io
+  name: allocations.ip.infoblox-nios.crossplane.io
 spec:
-  group: dns.infoblox-nios.upbound.io
+  group: ip.infoblox-nios.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox-nios
-    kind: TXT
-    listKind: TXTList
-    plural: txts
-    singular: txt
+    kind: Allocation
+    listKind: AllocationList
+    plural: allocations
+    singular: allocation
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: TXT is the Schema for the TXTs API. <no value>
+        description: Allocation is the Schema for the Allocations API. <no value>
         properties:
           apiVersion:
             description: |-
@@ -54,7 +54,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: TXTSpec defines the desired state of TXT
+            description: AllocationSpec defines the desired state of Allocation
             properties:
               deletionPolicy:
                 default: Delete
@@ -72,24 +72,52 @@ spec:
                 type: string
               forProvider:
                 properties:
+                  allocatedIpv4Addr:
+                    description: Value which comes from 'ipv4_addr' (if specified)
+                      or from auto-allocation function (using 'ipv4_cidr').
+                    type: string
+                  allocatedIpv6Addr:
+                    description: Value which comes from 'ipv6_addr' (if specified)
+                      or from auto-allocation function (using 'ipv6_cidr').
+                    type: string
                   comment:
-                    description: Description of the TXT-record.
+                    description: A description of IP address allocation.
                     type: string
                   dnsView:
-                    description: DNS view in which the record's zone exists.
+                    description: DNS view under which the zone has been created.
                     type: string
+                  enableDns:
+                    description: flag that defines if the host record is to be used
+                      for DNS purposes.
+                    type: boolean
                   extAttrs:
-                    description: Extensible attributes of the TXT-record to be added/updated,
+                    description: The extensible attributes for IP address allocation,
                       as a map in JSON format
                     type: string
                   fqdn:
-                    description: FQDN for the TXT-Record.
+                    description: The host name for Host Record in FQDN format.
                     type: string
-                  text:
-                    description: Data to be associated with TXT_Record.
+                  ipv4Addr:
+                    description: IPv4 address of cloud instance.Set a valid IP address
+                      for static allocation and leave empty if dynamically allocated.
+                    type: string
+                  ipv4Cidr:
+                    description: The IPv4 cidr from which an IPv4 address will be
+                      allocated.
+                    type: string
+                  ipv6Addr:
+                    description: IPv6 address of cloud instance.Set a valid IP address
+                      for static allocation and leave empty if dynamically allocated.
+                    type: string
+                  ipv6Cidr:
+                    description: The IPv6 cidr from which an IPv6 address will be
+                      allocated.
+                    type: string
+                  networkView:
+                    description: network view name on NIOS server.
                     type: string
                   ttl:
-                    description: TTL value of the TXT-Record
+                    description: TTL attribute value for the record.
                     type: number
                 type: object
               initProvider:
@@ -105,24 +133,52 @@ spec:
                   for example because of an external controller is managing them, like an
                   autoscaler.
                 properties:
+                  allocatedIpv4Addr:
+                    description: Value which comes from 'ipv4_addr' (if specified)
+                      or from auto-allocation function (using 'ipv4_cidr').
+                    type: string
+                  allocatedIpv6Addr:
+                    description: Value which comes from 'ipv6_addr' (if specified)
+                      or from auto-allocation function (using 'ipv6_cidr').
+                    type: string
                   comment:
-                    description: Description of the TXT-record.
+                    description: A description of IP address allocation.
                     type: string
                   dnsView:
-                    description: DNS view in which the record's zone exists.
+                    description: DNS view under which the zone has been created.
                     type: string
+                  enableDns:
+                    description: flag that defines if the host record is to be used
+                      for DNS purposes.
+                    type: boolean
                   extAttrs:
-                    description: Extensible attributes of the TXT-record to be added/updated,
+                    description: The extensible attributes for IP address allocation,
                       as a map in JSON format
                     type: string
                   fqdn:
-                    description: FQDN for the TXT-Record.
+                    description: The host name for Host Record in FQDN format.
                     type: string
-                  text:
-                    description: Data to be associated with TXT_Record.
+                  ipv4Addr:
+                    description: IPv4 address of cloud instance.Set a valid IP address
+                      for static allocation and leave empty if dynamically allocated.
+                    type: string
+                  ipv4Cidr:
+                    description: The IPv4 cidr from which an IPv4 address will be
+                      allocated.
+                    type: string
+                  ipv6Addr:
+                    description: IPv6 address of cloud instance.Set a valid IP address
+                      for static allocation and leave empty if dynamically allocated.
+                    type: string
+                  ipv6Cidr:
+                    description: The IPv6 cidr from which an IPv6 address will be
+                      allocated.
+                    type: string
+                  networkView:
+                    description: network view name on NIOS server.
                     type: string
                   ttl:
-                    description: TTL value of the TXT-Record
+                    description: TTL attribute value for the record.
                     type: number
                 type: object
               managementPolicies:
@@ -298,30 +354,63 @@ spec:
                 || ''Update'' in self.managementPolicies) || has(self.forProvider.fqdn)
                 || (has(self.initProvider) && has(self.initProvider.fqdn))'
           status:
-            description: TXTStatus defines the observed state of TXT.
+            description: AllocationStatus defines the observed state of Allocation.
             properties:
               atProvider:
                 properties:
+                  allocatedIpv4Addr:
+                    description: Value which comes from 'ipv4_addr' (if specified)
+                      or from auto-allocation function (using 'ipv4_cidr').
+                    type: string
+                  allocatedIpv6Addr:
+                    description: Value which comes from 'ipv6_addr' (if specified)
+                      or from auto-allocation function (using 'ipv6_cidr').
+                    type: string
                   comment:
-                    description: Description of the TXT-record.
+                    description: A description of IP address allocation.
                     type: string
                   dnsView:
-                    description: DNS view in which the record's zone exists.
+                    description: DNS view under which the zone has been created.
                     type: string
+                  enableDns:
+                    description: flag that defines if the host record is to be used
+                      for DNS purposes.
+                    type: boolean
                   extAttrs:
-                    description: Extensible attributes of the TXT-record to be added/updated,
+                    description: The extensible attributes for IP address allocation,
                       as a map in JSON format
                     type: string
                   fqdn:
-                    description: FQDN for the TXT-Record.
+                    description: The host name for Host Record in FQDN format.
                     type: string
                   id:
                     type: string
-                  text:
-                    description: Data to be associated with TXT_Record.
+                  internalId:
+                    type: string
+                  ipv4Addr:
+                    description: IPv4 address of cloud instance.Set a valid IP address
+                      for static allocation and leave empty if dynamically allocated.
+                    type: string
+                  ipv4Cidr:
+                    description: The IPv4 cidr from which an IPv4 address will be
+                      allocated.
+                    type: string
+                  ipv6Addr:
+                    description: IPv6 address of cloud instance.Set a valid IP address
+                      for static allocation and leave empty if dynamically allocated.
+                    type: string
+                  ipv6Cidr:
+                    description: The IPv6 cidr from which an IPv6 address will be
+                      allocated.
+                    type: string
+                  networkView:
+                    description: network view name on NIOS server.
+                    type: string
+                  ref:
+                    description: NIOS object's reference, not to be set by a user.
                     type: string
                   ttl:
-                    description: TTL value of the TXT-Record
+                    description: TTL attribute value for the record.
                     type: number
                 type: object
               conditions:

@@ -4,18 +4,18 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: records.dns.infoblox-nios.upbound.io
+  name: srvs.dns.infoblox-nios.crossplane.io
 spec:
-  group: dns.infoblox-nios.upbound.io
+  group: dns.infoblox-nios.crossplane.io
   names:
     categories:
     - crossplane
     - managed
     - infoblox-nios
-    kind: Record
-    listKind: RecordList
-    plural: records
-    singular: record
+    kind: SRV
+    listKind: SRVList
+    plural: srvs
+    singular: srv
   scope: Cluster
   versions:
   - additionalPrinterColumns:
@@ -34,7 +34,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Record is the Schema for the Records API. <no value>
+        description: SRV is the Schema for the SRVs API. <no value>
         properties:
           apiVersion:
             description: |-
@@ -54,7 +54,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: RecordSpec defines the desired state of Record
+            description: SRVSpec defines the desired state of SRV
             properties:
               deletionPolicy:
                 default: Delete
@@ -72,37 +72,31 @@ spec:
                 type: string
               forProvider:
                 properties:
-                  cidr:
-                    description: Network to allocate an IP address from, when the
-                      'ip_addr' field is empty (dynamic allocation). The address is
-                      in CIDR format. For static allocation, leave this field empty.
-                    type: string
                   comment:
-                    description: Description of the A-record.
+                    description: Description of the SRV-record
                     type: string
                   dnsView:
-                    description: DNS view which the zone does exist within.
+                    description: DNS view which the zone does exist within
                     type: string
                   extAttrs:
-                    description: Extensible attributes of the A-record to be added/updated,
-                      as a map in JSON format
+                    description: Extensible attributes of the SRV-record to be added/updated,
+                      as a map in JSON format.
                     type: string
-                  fqdn:
-                    description: FQDN for the A-record.
-                    type: string
-                  ipAddr:
-                    description: IP address to associate with the A-record. For static
-                      allocation, set the field with a valid IP address. For dynamic
-                      allocation, leave this field empty and set 'cidr' and 'network_view'
-                      fields.
-                    type: string
-                  networkView:
-                    description: Network view to use when allocating an IP address
-                      from a network dynamically. For static allocation, leave this
-                      field empty.
+                  port:
+                    description: Configures port number (0..65535) for this SRV-record.
+                    type: number
+                  priority:
+                    description: Configures the priority (0..65535) for this SRV-record.
+                    type: number
+                  target:
+                    description: Provides service for domain name in the SRV-record.
                     type: string
                   ttl:
-                    description: TTL value for the A-record.
+                    description: TTL value for the SRV-record.
+                    type: number
+                  weight:
+                    description: Configures weight of the SRV-record, valid values
+                      are 0..65535.
                     type: number
                 type: object
               initProvider:
@@ -118,37 +112,31 @@ spec:
                   for example because of an external controller is managing them, like an
                   autoscaler.
                 properties:
-                  cidr:
-                    description: Network to allocate an IP address from, when the
-                      'ip_addr' field is empty (dynamic allocation). The address is
-                      in CIDR format. For static allocation, leave this field empty.
-                    type: string
                   comment:
-                    description: Description of the A-record.
+                    description: Description of the SRV-record
                     type: string
                   dnsView:
-                    description: DNS view which the zone does exist within.
+                    description: DNS view which the zone does exist within
                     type: string
                   extAttrs:
-                    description: Extensible attributes of the A-record to be added/updated,
-                      as a map in JSON format
+                    description: Extensible attributes of the SRV-record to be added/updated,
+                      as a map in JSON format.
                     type: string
-                  fqdn:
-                    description: FQDN for the A-record.
-                    type: string
-                  ipAddr:
-                    description: IP address to associate with the A-record. For static
-                      allocation, set the field with a valid IP address. For dynamic
-                      allocation, leave this field empty and set 'cidr' and 'network_view'
-                      fields.
-                    type: string
-                  networkView:
-                    description: Network view to use when allocating an IP address
-                      from a network dynamically. For static allocation, leave this
-                      field empty.
+                  port:
+                    description: Configures port number (0..65535) for this SRV-record.
+                    type: number
+                  priority:
+                    description: Configures the priority (0..65535) for this SRV-record.
+                    type: number
+                  target:
+                    description: Provides service for domain name in the SRV-record.
                     type: string
                   ttl:
-                    description: TTL value for the A-record.
+                    description: TTL value for the SRV-record.
+                    type: number
+                  weight:
+                    description: Configures weight of the SRV-record, valid values
+                      are 0..65535.
                     type: number
                 type: object
               managementPolicies:
@@ -319,48 +307,54 @@ spec:
             - forProvider
             type: object
             x-kubernetes-validations:
-            - message: spec.forProvider.fqdn is a required parameter
+            - message: spec.forProvider.port is a required parameter
               rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
-                || ''Update'' in self.managementPolicies) || has(self.forProvider.fqdn)
-                || (has(self.initProvider) && has(self.initProvider.fqdn))'
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.port)
+                || (has(self.initProvider) && has(self.initProvider.port))'
+            - message: spec.forProvider.priority is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.priority)
+                || (has(self.initProvider) && has(self.initProvider.priority))'
+            - message: spec.forProvider.target is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.target)
+                || (has(self.initProvider) && has(self.initProvider.target))'
+            - message: spec.forProvider.weight is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.weight)
+                || (has(self.initProvider) && has(self.initProvider.weight))'
           status:
-            description: RecordStatus defines the observed state of Record.
+            description: SRVStatus defines the observed state of SRV.
             properties:
               atProvider:
                 properties:
-                  cidr:
-                    description: Network to allocate an IP address from, when the
-                      'ip_addr' field is empty (dynamic allocation). The address is
-                      in CIDR format. For static allocation, leave this field empty.
-                    type: string
                   comment:
-                    description: Description of the A-record.
+                    description: Description of the SRV-record
                     type: string
                   dnsView:
-                    description: DNS view which the zone does exist within.
+                    description: DNS view which the zone does exist within
                     type: string
                   extAttrs:
-                    description: Extensible attributes of the A-record to be added/updated,
-                      as a map in JSON format
-                    type: string
-                  fqdn:
-                    description: FQDN for the A-record.
+                    description: Extensible attributes of the SRV-record to be added/updated,
+                      as a map in JSON format.
                     type: string
                   id:
                     type: string
-                  ipAddr:
-                    description: IP address to associate with the A-record. For static
-                      allocation, set the field with a valid IP address. For dynamic
-                      allocation, leave this field empty and set 'cidr' and 'network_view'
-                      fields.
-                    type: string
-                  networkView:
-                    description: Network view to use when allocating an IP address
-                      from a network dynamically. For static allocation, leave this
-                      field empty.
+                  port:
+                    description: Configures port number (0..65535) for this SRV-record.
+                    type: number
+                  priority:
+                    description: Configures the priority (0..65535) for this SRV-record.
+                    type: number
+                  target:
+                    description: Provides service for domain name in the SRV-record.
                     type: string
                   ttl:
-                    description: TTL value for the A-record.
+                    description: TTL value for the SRV-record.
+                    type: number
+                  weight:
+                    description: Configures weight of the SRV-record, valid values
+                      are 0..65535.
                     type: number
                 type: object
               conditions:
