@@ -234,6 +234,9 @@ jobs:
 
       - name: Vendor Dependencies
         run: make vendor vendor.check
+      
+      - name: Install Tools
+        run: make tools
 
       - name: Deploying locally built provider package
         run: make local-deploy
