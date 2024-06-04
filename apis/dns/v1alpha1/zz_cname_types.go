@@ -13,6 +13,27 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type CNAMEInitParameters struct {
+
+	// The alias name in FQDN format.
+	Alias *string `json:"alias,omitempty" tf:"alias,omitempty"`
+
+	// The Canonical name in FQDN format.
+	Canonical *string `json:"canonical,omitempty" tf:"canonical,omitempty"`
+
+	// A description about CNAME record.
+	Comment *string `json:"comment,omitempty" tf:"comment,omitempty"`
+
+	// Dns View under which the zone has been created.
+	DNSView *string `json:"dnsView,omitempty" tf:"dns_view,omitempty"`
+
+	// The Extensible attributes of CNAME record, as a map in JSON format
+	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// TTL attribute value for the record.
+	TTL *float64 `json:"ttl,omitempty" tf:"ttl,omitempty"`
+}
+
 type CNAMEObservation struct {
 
 	// The alias name in FQDN format.
@@ -67,6 +88,17 @@ type CNAMEParameters struct {
 type CNAMESpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     CNAMEParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider CNAMEInitParameters `json:"initProvider,omitempty"`
 }
 
 // CNAMEStatus defines the observed state of CNAME.
@@ -76,19 +108,20 @@ type CNAMEStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // CNAME is the Schema for the CNAMEs API. <no value>
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,infoblox-nios}
 type CNAME struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// +kubebuilder:validation:XValidation:rule="self.managementPolicy == 'ObserveOnly' || has(self.forProvider.alias)",message="alias is a required parameter"
-	// +kubebuilder:validation:XValidation:rule="self.managementPolicy == 'ObserveOnly' || has(self.forProvider.canonical)",message="canonical is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.alias) || (has(self.initProvider) && has(self.initProvider.alias))",message="spec.forProvider.alias is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.canonical) || (has(self.initProvider) && has(self.initProvider.canonical))",message="spec.forProvider.canonical is a required parameter"
 	Spec   CNAMESpec   `json:"spec"`
 	Status CNAMEStatus `json:"status,omitempty"`
 }

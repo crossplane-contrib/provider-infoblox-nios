@@ -13,6 +13,21 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type AssociationInitParameters struct {
+
+	// DHCP unique identifier for IPv6.
+	Duid *string `json:"duid,omitempty" tf:"duid,omitempty"`
+
+	// The flag which defines if the host record is to be used for IPAM purposes.
+	EnableDHCP *bool `json:"enableDhcp,omitempty" tf:"enable_dhcp,omitempty"`
+
+	// This value must point to the ID of the appropriate allocation resource. Required on resource creation.
+	InternalID *string `json:"internalId,omitempty" tf:"internal_id,omitempty"`
+
+	// MAC address of a cloud instance.
+	MacAddr *string `json:"macAddr,omitempty" tf:"mac_addr,omitempty"`
+}
+
 type AssociationObservation struct {
 
 	// DHCP unique identifier for IPv6.
@@ -56,6 +71,17 @@ type AssociationParameters struct {
 type AssociationSpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     AssociationParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider AssociationInitParameters `json:"initProvider,omitempty"`
 }
 
 // AssociationStatus defines the observed state of Association.
@@ -65,13 +91,14 @@ type AssociationStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // Association is the Schema for the Associations API. <no value>
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,infoblox-nios}
 type Association struct {
 	metav1.TypeMeta   `json:",inline"`

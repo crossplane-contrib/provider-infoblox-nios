@@ -2,9 +2,9 @@
 # Setup Project
 
 PROJECT_NAME ?= provider-infoblox-nios
-PROJECT_REPO ?= github.com/fire-ant/$(PROJECT_NAME)
+PROJECT_REPO ?= github.com/crossplane-contrib/$(PROJECT_NAME)
 
-export TERRAFORM_VERSION ?= 1.3.3
+export TERRAFORM_VERSION ?= 1.5.0
 
 export TERRAFORM_PROVIDER_SOURCE ?= infobloxopen/infoblox
 export TERRAFORM_PROVIDER_VERSION ?= 2.4.0
@@ -41,7 +41,7 @@ NPROCS ?= 1
 # to half the number of CPU cores.
 GO_TEST_PARALLEL := $(shell echo $$(( $(NPROCS) / 2 )))
 
-GO_REQUIRED_VERSION ?= 1.19
+GO_REQUIRED_VERSION ?= 1.22
 GOLANGCILINT_VERSION ?= 1.50.0
 GO_STATIC_PACKAGES = $(GO_PROJECT)/cmd/provider $(GO_PROJECT)/cmd/generator
 GO_LDFLAGS += -X $(GO_PROJECT)/internal/version.Version=$(VERSION)
@@ -52,11 +52,11 @@ GO_SUBDIRS += cmd internal apis
 # Setup Kubernetes tools
 
 KIND_VERSION = v0.15.0
-UP_VERSION = v0.14.0
+UP_VERSION = v0.29.0
 USE_HELM3 = true
 HELM3_VERSION = v3.9.1
 UP_CHANNEL = stable
-UPTEST_VERSION = v0.2.1
+UPTEST_VERSION = v0.11.1
 -include build/makelib/k8s_tools.mk
 
 # ====================================================================================

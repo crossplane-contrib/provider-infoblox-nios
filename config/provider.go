@@ -8,31 +8,31 @@ import (
 	// Note(turkenh): we are importing this to embed provider schema document
 	_ "embed"
 
-	ujconfig "github.com/upbound/upjet/pkg/config"
+	ujconfig "github.com/crossplane/upjet/pkg/config"
 
-	"github.com/fire-ant/provider-infoblox-nios/config/dns/aaaarecord"
-	"github.com/fire-ant/provider-infoblox-nios/config/dns/arecord"
-	"github.com/fire-ant/provider-infoblox-nios/config/dns/cnamerecord"
-	"github.com/fire-ant/provider-infoblox-nios/config/dns/mxrecord"
-	"github.com/fire-ant/provider-infoblox-nios/config/dns/ptrrecord"
-	"github.com/fire-ant/provider-infoblox-nios/config/dns/srvrecord"
-	"github.com/fire-ant/provider-infoblox-nios/config/dns/txtrecord"
-	"github.com/fire-ant/provider-infoblox-nios/config/ip/allocation"
-	"github.com/fire-ant/provider-infoblox-nios/config/ip/association"
-	"github.com/fire-ant/provider-infoblox-nios/config/ipv4/ipv4allocation"
-	"github.com/fire-ant/provider-infoblox-nios/config/ipv4/ipv4association"
-	"github.com/fire-ant/provider-infoblox-nios/config/ipv4/ipv4network"
-	"github.com/fire-ant/provider-infoblox-nios/config/ipv4/ipv4networkcontainer"
-	"github.com/fire-ant/provider-infoblox-nios/config/ipv6/ipv6allocation"
-	"github.com/fire-ant/provider-infoblox-nios/config/ipv6/ipv6association"
-	"github.com/fire-ant/provider-infoblox-nios/config/ipv6/ipv6network"
-	"github.com/fire-ant/provider-infoblox-nios/config/ipv6/ipv6networkcontainer"
-	"github.com/fire-ant/provider-infoblox-nios/config/network/view"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/dns/aaaarecord"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/dns/arecord"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/dns/cnamerecord"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/dns/mxrecord"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/dns/ptrrecord"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/dns/srvrecord"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/dns/txtrecord"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/ip/allocation"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/ip/association"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/ipv4/ipv4allocation"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/ipv4/ipv4association"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/ipv4/ipv4network"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/ipv4/ipv4networkcontainer"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/ipv6/ipv6allocation"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/ipv6/ipv6association"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/ipv6/ipv6network"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/ipv6/ipv6networkcontainer"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config/network/view"
 )
 
 const (
 	resourcePrefix = "infoblox-nios"
-	modulePath     = "github.com/fire-ant/provider-infoblox-nios"
+	modulePath     = "github.com/crossplane-contrib/provider-infoblox-nios"
 )
 
 //go:embed schema.json

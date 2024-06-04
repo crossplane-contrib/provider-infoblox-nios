@@ -13,6 +13,27 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type NetworkContainerInitParameters struct {
+
+	// Set the parameter's value > 0 to allocate next available network container with corresponding prefix length from the network container defined by 'parent_cidr'
+	AllocatePrefixLen *float64 `json:"allocatePrefixLen,omitempty" tf:"allocate_prefix_len,omitempty"`
+
+	// The network container's address, in CIDR format.
+	Cidr *string `json:"cidr,omitempty" tf:"cidr,omitempty"`
+
+	// A description of the network container.
+	Comment *string `json:"comment,omitempty" tf:"comment,omitempty"`
+
+	// The Extensible attributes of the network container to be added/updated, as a map in JSON format
+	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// The name of network view for the network container.
+	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
+
+	// The parent network container block in CIDR format to allocate from.
+	ParentCidr *string `json:"parentCidr,omitempty" tf:"parent_cidr,omitempty"`
+}
+
 type NetworkContainerObservation struct {
 
 	// Set the parameter's value > 0 to allocate next available network container with corresponding prefix length from the network container defined by 'parent_cidr'
@@ -67,6 +88,17 @@ type NetworkContainerParameters struct {
 type NetworkContainerSpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     NetworkContainerParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider NetworkContainerInitParameters `json:"initProvider,omitempty"`
 }
 
 // NetworkContainerStatus defines the observed state of NetworkContainer.
@@ -76,13 +108,14 @@ type NetworkContainerStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // NetworkContainer is the Schema for the NetworkContainers API. <no value>
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,infoblox-nios}
 type NetworkContainer struct {
 	metav1.TypeMeta   `json:",inline"`

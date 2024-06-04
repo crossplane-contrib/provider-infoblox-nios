@@ -13,6 +13,33 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type AAAAInitParameters struct {
+
+	// The network address in cidr format under which record has to be created.
+	Cidr *string `json:"cidr,omitempty" tf:"cidr,omitempty"`
+
+	// A description about AAAA record.
+	Comment *string `json:"comment,omitempty" tf:"comment,omitempty"`
+
+	// Dns View under which the zone has been created.
+	DNSView *string `json:"dnsView,omitempty" tf:"dns_view,omitempty"`
+
+	// The Extensible attributes of AAAA record to be added/updated, as a map in JSON format
+	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// The name of the AAAA record in FQDN format.
+	Fqdn *string `json:"fqdn,omitempty" tf:"fqdn,omitempty"`
+
+	// IPv6 address for record creation. Set the field with valid IP for static allocation. If to be dynamically allocated set cidr field
+	IPv6Addr *string `json:"ipv6Addr,omitempty" tf:"ipv6_addr,omitempty"`
+
+	// Network view name of NIOS server.
+	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
+
+	// TTL attribute value for the record.
+	TTL *float64 `json:"ttl,omitempty" tf:"ttl,omitempty"`
+}
+
 type AAAAObservation struct {
 
 	// The network address in cidr format under which record has to be created.
@@ -81,6 +108,17 @@ type AAAAParameters struct {
 type AAAASpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     AAAAParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider AAAAInitParameters `json:"initProvider,omitempty"`
 }
 
 // AAAAStatus defines the observed state of AAAA.
@@ -90,18 +128,19 @@ type AAAAStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // AAAA is the Schema for the AAAAs API. <no value>
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,infoblox-nios}
 type AAAA struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	// +kubebuilder:validation:XValidation:rule="self.managementPolicy == 'ObserveOnly' || has(self.forProvider.fqdn)",message="fqdn is a required parameter"
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.fqdn) || (has(self.initProvider) && has(self.initProvider.fqdn))",message="spec.forProvider.fqdn is a required parameter"
 	Spec   AAAASpec   `json:"spec"`
 	Status AAAAStatus `json:"status,omitempty"`
 }

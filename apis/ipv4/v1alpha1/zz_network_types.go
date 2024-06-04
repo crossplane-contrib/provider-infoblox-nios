@@ -13,6 +13,36 @@ import (
 	v1 "github.com/crossplane/crossplane-runtime/apis/common/v1"
 )
 
+type NetworkInitParameters struct {
+
+	// Set the parameter's value > 0 to allocate next available network with corresponding prefix length from the network container defined by 'parent_cidr'
+	AllocatePrefixLen *float64 `json:"allocatePrefixLen,omitempty" tf:"allocate_prefix_len,omitempty"`
+
+	// The network block in cidr format.
+	Cidr *string `json:"cidr,omitempty" tf:"cidr,omitempty"`
+
+	// A string describing the network
+	Comment *string `json:"comment,omitempty" tf:"comment,omitempty"`
+
+	// The Extensible attributes of the Network, as a map in JSON format
+	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// Gateway's IP address of the network. By default, the first IP address is set as gateway address; if the value is 'none' then the network has no gateway.
+	Gateway *string `json:"gateway,omitempty" tf:"gateway,omitempty"`
+
+	// Network view name available in NIOS Server.
+	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
+
+	// The parent network container block in cidr format to allocate from.
+	ParentCidr *string `json:"parentCidr,omitempty" tf:"parent_cidr,omitempty"`
+
+	// The number of IP's you want to reserve in IPv4 Network.
+	ReserveIP *float64 `json:"reserveIp,omitempty" tf:"reserve_ip,omitempty"`
+
+	// The number of IP's you want to reserve in IPv6 Network
+	ReserveIPv6 *float64 `json:"reserveIpv6,omitempty" tf:"reserve_ipv6,omitempty"`
+}
+
 type NetworkObservation struct {
 
 	// Set the parameter's value > 0 to allocate next available network with corresponding prefix length from the network container defined by 'parent_cidr'
@@ -88,6 +118,17 @@ type NetworkParameters struct {
 type NetworkSpec struct {
 	v1.ResourceSpec `json:",inline"`
 	ForProvider     NetworkParameters `json:"forProvider"`
+	// THIS IS A BETA FIELD. It will be honored
+	// unless the Management Policies feature flag is disabled.
+	// InitProvider holds the same fields as ForProvider, with the exception
+	// of Identifier and other resource reference fields. The fields that are
+	// in InitProvider are merged into ForProvider when the resource is created.
+	// The same fields are also added to the terraform ignore_changes hook, to
+	// avoid updating them after creation. This is useful for fields that are
+	// required on creation, but we do not desire to update them after creation,
+	// for example because of an external controller is managing them, like an
+	// autoscaler.
+	InitProvider NetworkInitParameters `json:"initProvider,omitempty"`
 }
 
 // NetworkStatus defines the observed state of Network.
@@ -97,13 +138,14 @@ type NetworkStatus struct {
 }
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
+// +kubebuilder:storageversion
 
 // Network is the Schema for the Networks API. <no value>
-// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="SYNCED",type="string",JSONPath=".status.conditions[?(@.type=='Synced')].status"
+// +kubebuilder:printcolumn:name="READY",type="string",JSONPath=".status.conditions[?(@.type=='Ready')].status"
 // +kubebuilder:printcolumn:name="EXTERNAL-NAME",type="string",JSONPath=".metadata.annotations.crossplane\\.io/external-name"
 // +kubebuilder:printcolumn:name="AGE",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:subresource:status
 // +kubebuilder:resource:scope=Cluster,categories={crossplane,managed,infoblox-nios}
 type Network struct {
 	metav1.TypeMeta   `json:",inline"`

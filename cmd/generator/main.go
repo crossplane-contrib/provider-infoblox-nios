@@ -9,9 +9,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/upbound/upjet/pkg/pipeline"
+	"github.com/crossplane/upjet/pkg/pipeline"
 
-	"github.com/fire-ant/provider-infoblox-nios/config"
+	"github.com/crossplane-contrib/provider-infoblox-nios/config"
 )
 
 func main() {

@@ -13,9 +13,9 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
-	"github.com/upbound/upjet/pkg/terraform"
+	"github.com/crossplane/upjet/pkg/terraform"
 
-	"github.com/fire-ant/provider-infoblox-nios/apis/v1beta1"
+	"github.com/crossplane-contrib/provider-infoblox-nios/apis/v1beta1"
 )
 
 const (
