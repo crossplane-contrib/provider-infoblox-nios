@@ -13,7 +13,7 @@ Install the provider by using the following command after changing the image tag
 to the [latest release](https://marketplace.upbound.io/providers/crossplane-contrib/provider-infoblox-nios):
 
 ```shell
-up ctp provider install crossplane-contrib/provider-infoblox-nios:v0.2.0
+up ctp provider install crossplane-contrib/provider-infoblox-nios:v0.3.0
 ```
 
 Alternatively, you can use declarative installation:
@@ -25,7 +25,7 @@ kind: Provider
 metadata:
   name: crossplane-contrib-provider-infoblox-nios
 spec:
-  package: xpkg.upbound.io/crossplane-contrib/provider-infoblox-nios:v0.2.0
+  package: xpkg.upbound.io/crossplane-contrib/provider-infoblox-nios:v0.3.0
 EOF
 ```
 
