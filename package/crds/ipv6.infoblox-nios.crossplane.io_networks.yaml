@@ -84,8 +84,11 @@ spec:
                     description: A string describing the network
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the Network, as a map
-                      in JSON format
+                    description: The Extensible attributes of the Network
+                    type: string
+                  filterParams:
+                    description: The parent network/network-container block's extensible
+                      attributes.
                     type: string
                   gateway:
                     description: Gateway's IP address of the network. By default,
@@ -94,6 +97,11 @@ spec:
                     type: string
                   networkView:
                     description: Network view name available in NIOS Server.
+                    type: string
+                  object:
+                    description: The parent object from which the network will be
+                      allocated. Valid values are 'networkcontainer' and 'network'.
+                      Default value is 'networkcontainer'.
                     type: string
                   parentCidr:
                     description: The parent network container block in cidr format
@@ -131,8 +139,11 @@ spec:
                     description: A string describing the network
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the Network, as a map
-                      in JSON format
+                    description: The Extensible attributes of the Network
+                    type: string
+                  filterParams:
+                    description: The parent network/network-container block's extensible
+                      attributes.
                     type: string
                   gateway:
                     description: Gateway's IP address of the network. By default,
@@ -141,6 +152,11 @@ spec:
                     type: string
                   networkView:
                     description: Network view name available in NIOS Server.
+                    type: string
+                  object:
+                    description: The parent object from which the network will be
+                      allocated. Valid values are 'networkcontainer' and 'network'.
+                      Default value is 'networkcontainer'.
                     type: string
                   parentCidr:
                     description: The parent network container block in cidr format
@@ -337,8 +353,11 @@ spec:
                     description: A string describing the network
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of the Network, as a map
-                      in JSON format
+                    description: The Extensible attributes of the Network
+                    type: string
+                  filterParams:
+                    description: The parent network/network-container block's extensible
+                      attributes.
                     type: string
                   gateway:
                     description: Gateway's IP address of the network. By default,
@@ -347,12 +366,22 @@ spec:
                     type: string
                   id:
                     type: string
+                  internalId:
+                    type: string
                   networkView:
                     description: Network view name available in NIOS Server.
+                    type: string
+                  object:
+                    description: The parent object from which the network will be
+                      allocated. Valid values are 'networkcontainer' and 'network'.
+                      Default value is 'networkcontainer'.
                     type: string
                   parentCidr:
                     description: The parent network container block in cidr format
                       to allocate from.
+                    type: string
+                  ref:
+                    description: NIOS object's reference, not to be set by a user.
                     type: string
                   reserveIp:
                     description: The number of IP's you want to reserve in IPv4 Network.

@@ -9,7 +9,7 @@ import "github.com/crossplane/upjet/pkg/config"
 // ExternalNameConfigs contains all external name configurations for this
 // provider.
 var ExternalNameConfigs = map[string]config.ExternalName{
-	"infoblox_ip_allocation":          config.IdentifierFromProvider,
+	//"infoblox_ip_allocation":          config.IdentifierFromProvider,
 	"infoblox_ip_association":         config.IdentifierFromProvider,
 	"infoblox_ipv4_allocation":        config.IdentifierFromProvider,
 	"infoblox_ipv4_association":       config.IdentifierFromProvider,

@@ -7,14 +7,13 @@ PROJECT_REPO ?= github.com/crossplane-contrib/$(PROJECT_NAME)
 export TERRAFORM_VERSION ?= 1.5.0
 
 export TERRAFORM_PROVIDER_SOURCE ?= infobloxopen/infoblox
-export TERRAFORM_PROVIDER_VERSION ?= 2.4.0
+export TERRAFORM_PROVIDER_VERSION ?= 2.10.0
 export TERRAFORM_PROVIDER_REPO := https://github.com/infobloxopen/terraform-provider-infoblox
-export TERRAFORM_PROVIDER_REPO_HACK := https://github.com/fire-ant/terraform-provider-infoblox
+#export TERRAFORM_PROVIDER_REPO_HACK := https://github.com/fire-ant/terraform-provider-infoblox
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME ?= terraform-provider-infoblox
 export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= https://github.com/infobloxopen/$(TERRAFORM_PROVIDER_DOWNLOAD_NAME)/releases/download/v$(TERRAFORM_PROVIDER_VERSION)
-export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-infoblox_v2.4.0
+export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-infoblox_v$(TERRAFORM_PROVIDER_VERSION)
 export TERRAFORM_DOCS_PATH ?= docs/resources
-
 
 PLATFORMS ?= linux_amd64 linux_arm64
 
@@ -51,10 +50,10 @@ GO_SUBDIRS += cmd internal apis
 # ====================================================================================
 # Setup Kubernetes tools
 
-KIND_VERSION = v0.15.0
-UP_VERSION = v0.29.0
+KIND_VERSION = v0.29.0
+UP_VERSION = v0.40.2
 USE_HELM3 = true
-HELM3_VERSION = v3.9.1
+HELM3_VERSION = v3.18.4
 UP_CHANNEL = stable
 UPTEST_VERSION = v0.11.1
 -include build/makelib/k8s_tools.mk
@@ -113,22 +112,42 @@ $(TERRAFORM):
 	@rm -fr $(TOOLS_HOST_DIR)/tmp-terraform
 	@$(OK) installing terraform $(HOSTOS)-$(HOSTARCH)
 
+export TERRAFORM_PLUGIN_DOCS_REPO ?= https://github.com/hashicorp/terraform-plugin-docs
+export TERRAFORM_PLUGIN_DOCS_VERSION ?= 0.23.0
+export TERRAFORM_PLUGIN_DOCS ?= $(TOOLS_HOST_DIR)/terraform-plugin-docs-$(TERRAFORM_PLUGIN_DOCS_VERSION)
+
+$(TERRAFORM_PLUGIN_DOCS):
+	@$(INFO) installing $(TERRAFORM_PLUGIN_DOCS) $(HOSTOS)-$(HOSTARCH)
+	@mkdir -p $(TOOLS_HOST_DIR)/tmp-terraform-plugin-docs
+	@curl -fsSL $(TERRAFORM_PLUGIN_DOCS_REPO)/releases/download/v$(TERRAFORM_PLUGIN_DOCS_VERSION)/tfplugindocs_$(TERRAFORM_PLUGIN_DOCS_VERSION)_$(SAFEHOST_PLATFORM).zip -o $(TOOLS_HOST_DIR)/tmp-terraform-plugin-docs/tfplugindocs.zip
+	@unzip $(TOOLS_HOST_DIR)/tmp-terraform-plugin-docs/tfplugindocs.zip -d $(TOOLS_HOST_DIR)/tmp-terraform-plugin-docs
+	@mv $(TOOLS_HOST_DIR)/tmp-terraform-plugin-docs/tfplugindocs $(TERRAFORM_PLUGIN_DOCS)
+	@rm -fr $(TOOLS_HOST_DIR)/tmp-terraform-plugin-docs
+	@$(OK) installing $(TERRAFORM_PLUGIN_DOCS) $(HOSTOS)-$(HOSTARCH)
+
 $(TERRAFORM_PROVIDER_SCHEMA): $(TERRAFORM)
 	@$(INFO) generating provider schema for $(TERRAFORM_PROVIDER_SOURCE) $(TERRAFORM_PROVIDER_VERSION)
 	@mkdir -p $(TERRAFORM_WORKDIR)
 	@echo '{"terraform":[{"required_providers":[{"provider":{"source":"'"$(TERRAFORM_PROVIDER_SOURCE)"'","version":"'"$(TERRAFORM_PROVIDER_VERSION)"'"}}],"required_version":"'"$(TERRAFORM_VERSION)"'"}]}' > $(TERRAFORM_WORKDIR)/main.tf.json
 	@$(TERRAFORM) -chdir=$(TERRAFORM_WORKDIR) init > $(TERRAFORM_WORKDIR)/terraform-logs.txt 2>&1
+	@$(INFO) post init
+
 	@$(TERRAFORM) -chdir=$(TERRAFORM_WORKDIR) providers schema -json=true > $(TERRAFORM_PROVIDER_SCHEMA) 2>> $(TERRAFORM_WORKDIR)/terraform-logs.txt
 	@$(OK) generating provider schema for $(TERRAFORM_PROVIDER_SOURCE) $(TERRAFORM_PROVIDER_VERSION)
 
 pull-docs:
 	@if [ ! -d "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" ]; then \
   		mkdir -p "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" && \
-		git clone -c advice.detachedHead=false --depth 1 --filter=blob:none --branch "v$(TERRAFORM_PROVIDER_VERSION)" --sparse "$(TERRAFORM_PROVIDER_REPO_HACK)" "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)"; \
+		git clone -c advice.detachedHead=false --branch "v$(TERRAFORM_PROVIDER_VERSION)" "$(TERRAFORM_PROVIDER_REPO)" "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)"; \
 	fi
-	@git -C "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" sparse-checkout set "$(TERRAFORM_DOCS_PATH)"
+#@git -C "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" sparse-checkout set "$(TERRAFORM_DOCS_PATH)"
 
-generate.init: $(TERRAFORM_PROVIDER_SCHEMA) pull-docs
+# The current doc structure is incompatible with the Upjet scraper, which expects 
+# a prelude section. We generate docs
+gen-docs: $(TERRAFORM_PLUGIN_DOCS)
+	$(TERRAFORM_PLUGIN_DOCS) generate --provider-dir $(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE) --provider-dir $(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)
+
+generate.init: $(TERRAFORM_PROVIDER_SCHEMA) pull-docs gen-docs
 
 .PHONY: $(TERRAFORM_PROVIDER_SCHEMA) pull-docs
 # ====================================================================================

@@ -344,6 +344,8 @@ spec:
                     type: string
                   id:
                     type: string
+                  internalId:
+                    type: string
                   ipAddr:
                     description: IPv4/IPv6 address for record creation. Set the field
                       with valid IP for static allocation. If to be dynamically allocated
@@ -358,6 +360,9 @@ spec:
                     type: string
                   recordName:
                     description: The name of the DNS PTR record in FQDN format
+                    type: string
+                  ref:
+                    description: NIOS object's reference, not to be set by a user.
                     type: string
                   ttl:
                     description: TTL attribute value for the record.

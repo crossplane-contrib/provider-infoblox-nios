@@ -62,6 +62,11 @@ func (in *AAAAInitParameters) DeepCopyInto(out *AAAAInitParameters) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.FilterParams != nil {
+		in, out := &in.FilterParams, &out.FilterParams
+		*out = new(string)
+		**out = **in
+	}
 	if in.Fqdn != nil {
 		in, out := &in.Fqdn, &out.Fqdn
 		*out = new(string)
@@ -149,6 +154,11 @@ func (in *AAAAObservation) DeepCopyInto(out *AAAAObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.FilterParams != nil {
+		in, out := &in.FilterParams, &out.FilterParams
+		*out = new(string)
+		**out = **in
+	}
 	if in.Fqdn != nil {
 		in, out := &in.Fqdn, &out.Fqdn
 		*out = new(string)
@@ -164,8 +174,18 @@ func (in *AAAAObservation) DeepCopyInto(out *AAAAObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.InternalID != nil {
+		in, out := &in.InternalID, &out.InternalID
+		*out = new(string)
+		**out = **in
+	}
 	if in.NetworkView != nil {
 		in, out := &in.NetworkView, &out.NetworkView
+		*out = new(string)
+		**out = **in
+	}
+	if in.Ref != nil {
+		in, out := &in.Ref, &out.Ref
 		*out = new(string)
 		**out = **in
 	}
@@ -206,6 +226,11 @@ func (in *AAAAParameters) DeepCopyInto(out *AAAAParameters) {
 	}
 	if in.ExtAttrs != nil {
 		in, out := &in.ExtAttrs, &out.ExtAttrs
+		*out = new(string)
+		**out = **in
+	}
+	if in.FilterParams != nil {
+		in, out := &in.FilterParams, &out.FilterParams
 		*out = new(string)
 		**out = **in
 	}
@@ -410,6 +435,16 @@ func (in *CNAMEObservation) DeepCopyInto(out *CNAMEObservation) {
 	}
 	if in.ID != nil {
 		in, out := &in.ID, &out.ID
+		*out = new(string)
+		**out = **in
+	}
+	if in.InternalID != nil {
+		in, out := &in.InternalID, &out.InternalID
+		*out = new(string)
+		**out = **in
+	}
+	if in.Ref != nil {
+		in, out := &in.Ref, &out.Ref
 		*out = new(string)
 		**out = **in
 	}
@@ -647,6 +682,11 @@ func (in *MXObservation) DeepCopyInto(out *MXObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.InternalID != nil {
+		in, out := &in.InternalID, &out.InternalID
+		*out = new(string)
+		**out = **in
+	}
 	if in.MailExchanger != nil {
 		in, out := &in.MailExchanger, &out.MailExchanger
 		*out = new(string)
@@ -655,6 +695,11 @@ func (in *MXObservation) DeepCopyInto(out *MXObservation) {
 	if in.Preference != nil {
 		in, out := &in.Preference, &out.Preference
 		*out = new(float64)
+		**out = **in
+	}
+	if in.Ref != nil {
+		in, out := &in.Ref, &out.Ref
+		*out = new(string)
 		**out = **in
 	}
 	if in.TTL != nil {
@@ -911,6 +956,11 @@ func (in *PTRObservation) DeepCopyInto(out *PTRObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.InternalID != nil {
+		in, out := &in.InternalID, &out.InternalID
+		*out = new(string)
+		**out = **in
+	}
 	if in.NetworkView != nil {
 		in, out := &in.NetworkView, &out.NetworkView
 		*out = new(string)
@@ -923,6 +973,11 @@ func (in *PTRObservation) DeepCopyInto(out *PTRObservation) {
 	}
 	if in.RecordName != nil {
 		in, out := &in.RecordName, &out.RecordName
+		*out = new(string)
+		**out = **in
+	}
+	if in.Ref != nil {
+		in, out := &in.Ref, &out.Ref
 		*out = new(string)
 		**out = **in
 	}
@@ -1088,6 +1143,11 @@ func (in *RecordInitParameters) DeepCopyInto(out *RecordInitParameters) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.FilterParams != nil {
+		in, out := &in.FilterParams, &out.FilterParams
+		*out = new(string)
+		**out = **in
+	}
 	if in.Fqdn != nil {
 		in, out := &in.Fqdn, &out.Fqdn
 		*out = new(string)
@@ -1175,6 +1235,11 @@ func (in *RecordObservation) DeepCopyInto(out *RecordObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.FilterParams != nil {
+		in, out := &in.FilterParams, &out.FilterParams
+		*out = new(string)
+		**out = **in
+	}
 	if in.Fqdn != nil {
 		in, out := &in.Fqdn, &out.Fqdn
 		*out = new(string)
@@ -1190,8 +1255,18 @@ func (in *RecordObservation) DeepCopyInto(out *RecordObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.InternalID != nil {
+		in, out := &in.InternalID, &out.InternalID
+		*out = new(string)
+		**out = **in
+	}
 	if in.NetworkView != nil {
 		in, out := &in.NetworkView, &out.NetworkView
+		*out = new(string)
+		**out = **in
+	}
+	if in.Ref != nil {
+		in, out := &in.Ref, &out.Ref
 		*out = new(string)
 		**out = **in
 	}
@@ -1232,6 +1307,11 @@ func (in *RecordParameters) DeepCopyInto(out *RecordParameters) {
 	}
 	if in.ExtAttrs != nil {
 		in, out := &in.ExtAttrs, &out.ExtAttrs
+		*out = new(string)
+		**out = **in
+	}
+	if in.FilterParams != nil {
+		in, out := &in.FilterParams, &out.FilterParams
 		*out = new(string)
 		**out = **in
 	}
@@ -1439,6 +1519,11 @@ func (in *SRVObservation) DeepCopyInto(out *SRVObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.InternalID != nil {
+		in, out := &in.InternalID, &out.InternalID
+		*out = new(string)
+		**out = **in
+	}
 	if in.Port != nil {
 		in, out := &in.Port, &out.Port
 		*out = new(float64)
@@ -1447,6 +1532,11 @@ func (in *SRVObservation) DeepCopyInto(out *SRVObservation) {
 	if in.Priority != nil {
 		in, out := &in.Priority, &out.Priority
 		*out = new(float64)
+		**out = **in
+	}
+	if in.Ref != nil {
+		in, out := &in.Ref, &out.Ref
+		*out = new(string)
 		**out = **in
 	}
 	if in.TTL != nil {
@@ -1695,6 +1785,16 @@ func (in *TXTObservation) DeepCopyInto(out *TXTObservation) {
 	}
 	if in.ID != nil {
 		in, out := &in.ID, &out.ID
+		*out = new(string)
+		**out = **in
+	}
+	if in.InternalID != nil {
+		in, out := &in.InternalID, &out.InternalID
+		*out = new(string)
+		**out = **in
+	}
+	if in.Ref != nil {
+		in, out := &in.Ref, &out.Ref
 		*out = new(string)
 		**out = **in
 	}

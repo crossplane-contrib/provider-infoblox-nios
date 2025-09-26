@@ -87,6 +87,11 @@ spec:
                     description: Extensible attributes of the A-record to be added/updated,
                       as a map in JSON format
                     type: string
+                  filterParams:
+                    description: The parent network block's extensible attributes
+                      (dynamic allocation). For static allocation, leave this field
+                      empty.
+                    type: string
                   fqdn:
                     description: FQDN for the A-record.
                     type: string
@@ -94,7 +99,7 @@ spec:
                     description: IP address to associate with the A-record. For static
                       allocation, set the field with a valid IP address. For dynamic
                       allocation, leave this field empty and set 'cidr' and 'network_view'
-                      fields.
+                      fieldsor 'filter_params' and optional 'network_view' fields.
                     type: string
                   networkView:
                     description: Network view to use when allocating an IP address
@@ -133,6 +138,11 @@ spec:
                     description: Extensible attributes of the A-record to be added/updated,
                       as a map in JSON format
                     type: string
+                  filterParams:
+                    description: The parent network block's extensible attributes
+                      (dynamic allocation). For static allocation, leave this field
+                      empty.
+                    type: string
                   fqdn:
                     description: FQDN for the A-record.
                     type: string
@@ -140,7 +150,7 @@ spec:
                     description: IP address to associate with the A-record. For static
                       allocation, set the field with a valid IP address. For dynamic
                       allocation, leave this field empty and set 'cidr' and 'network_view'
-                      fields.
+                      fieldsor 'filter_params' and optional 'network_view' fields.
                     type: string
                   networkView:
                     description: Network view to use when allocating an IP address
@@ -343,21 +353,31 @@ spec:
                     description: Extensible attributes of the A-record to be added/updated,
                       as a map in JSON format
                     type: string
+                  filterParams:
+                    description: The parent network block's extensible attributes
+                      (dynamic allocation). For static allocation, leave this field
+                      empty.
+                    type: string
                   fqdn:
                     description: FQDN for the A-record.
                     type: string
                   id:
                     type: string
+                  internalId:
+                    type: string
                   ipAddr:
                     description: IP address to associate with the A-record. For static
                       allocation, set the field with a valid IP address. For dynamic
                       allocation, leave this field empty and set 'cidr' and 'network_view'
-                      fields.
+                      fieldsor 'filter_params' and optional 'network_view' fields.
                     type: string
                   networkView:
                     description: Network view to use when allocating an IP address
                       from a network dynamically. For static allocation, leave this
                       field empty.
+                    type: string
+                  ref:
+                    description: NIOS object's reference, not to be set by a user.
                     type: string
                   ttl:
                     description: TTL value for the A-record.

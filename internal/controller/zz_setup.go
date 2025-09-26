@@ -16,14 +16,9 @@ import (
 	record "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/record"
 	srv "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/srv"
 	txt "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/txt"
-	allocation "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ip/allocation"
 	association "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ip/association"
-	allocationipv4 "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ipv4/allocation"
-	associationipv4 "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ipv4/association"
 	network "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ipv4/network"
 	networkcontainer "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ipv4/networkcontainer"
-	allocationipv6 "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ipv6/allocation"
-	associationipv6 "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ipv6/association"
 	networkipv6 "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ipv6/network"
 	networkcontaineripv6 "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ipv6/networkcontainer"
 	view "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/network/view"
@@ -41,14 +36,9 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		record.Setup,
 		srv.Setup,
 		txt.Setup,
-		allocation.Setup,
 		association.Setup,
-		allocationipv4.Setup,
-		associationipv4.Setup,
 		network.Setup,
 		networkcontainer.Setup,
-		allocationipv6.Setup,
-		associationipv6.Setup,
 		networkipv6.Setup,
 		networkcontaineripv6.Setup,
 		view.Setup,

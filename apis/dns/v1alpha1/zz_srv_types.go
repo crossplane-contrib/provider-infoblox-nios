@@ -53,11 +53,16 @@ type SRVObservation struct {
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
+	InternalID *string `json:"internalId,omitempty" tf:"internal_id,omitempty"`
+
 	// Configures port number (0..65535) for this SRV-record.
 	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
 
 	// Configures the priority (0..65535) for this SRV-record.
 	Priority *float64 `json:"priority,omitempty" tf:"priority,omitempty"`
+
+	// NIOS object's reference, not to be set by a user.
+	Ref *string `json:"ref,omitempty" tf:"ref,omitempty"`
 
 	// TTL value for the SRV-record.
 	TTL *float64 `json:"ttl,omitempty" tf:"ttl,omitempty"`

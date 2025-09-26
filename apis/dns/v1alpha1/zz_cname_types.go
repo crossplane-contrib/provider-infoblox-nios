@@ -53,6 +53,11 @@ type CNAMEObservation struct {
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
+	InternalID *string `json:"internalId,omitempty" tf:"internal_id,omitempty"`
+
+	// NIOS object's reference, not to be set by a user.
+	Ref *string `json:"ref,omitempty" tf:"ref,omitempty"`
+
 	// TTL attribute value for the record.
 	TTL *float64 `json:"ttl,omitempty" tf:"ttl,omitempty"`
 }

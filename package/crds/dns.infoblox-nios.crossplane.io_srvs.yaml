@@ -340,12 +340,17 @@ spec:
                     type: string
                   id:
                     type: string
+                  internalId:
+                    type: string
                   port:
                     description: Configures port number (0..65535) for this SRV-record.
                     type: number
                   priority:
                     description: Configures the priority (0..65535) for this SRV-record.
                     type: number
+                  ref:
+                    description: NIOS object's reference, not to be set by a user.
+                    type: string
                   target:
                     description: Provides service for domain name in the SRV-record.
                     type: string

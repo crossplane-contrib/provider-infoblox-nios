@@ -88,6 +88,10 @@ spec:
                     description: The Extensible attributes of the network container
                       to be added/updated, as a map in JSON format
                     type: string
+                  filterParams:
+                    description: The parent network/network-container block's extensible
+                      attributes.
+                    type: string
                   networkView:
                     description: The name of network view for the network container.
                     type: string
@@ -123,6 +127,10 @@ spec:
                   extAttrs:
                     description: The Extensible attributes of the network container
                       to be added/updated, as a map in JSON format
+                    type: string
+                  filterParams:
+                    description: The parent network/network-container block's extensible
+                      attributes.
                     type: string
                   networkView:
                     description: The name of network view for the network container.
@@ -319,7 +327,13 @@ spec:
                     description: The Extensible attributes of the network container
                       to be added/updated, as a map in JSON format
                     type: string
+                  filterParams:
+                    description: The parent network/network-container block's extensible
+                      attributes.
+                    type: string
                   id:
+                    type: string
+                  internalId:
                     type: string
                   networkView:
                     description: The name of network view for the network container.
@@ -327,6 +341,9 @@ spec:
                   parentCidr:
                     description: The parent network container block in CIDR format
                       to allocate from.
+                    type: string
+                  ref:
+                    description: NIOS object's reference, not to be set by a user.
                     type: string
                 type: object
               conditions:

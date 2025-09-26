@@ -7,12 +7,6 @@ Copyright 2022 Upbound Inc.
 package v1alpha1
 
 // Hub marks this type as a conversion hub.
-func (tr *Allocation) Hub() {}
-
-// Hub marks this type as a conversion hub.
-func (tr *Association) Hub() {}
-
-// Hub marks this type as a conversion hub.
 func (tr *Network) Hub() {}
 
 // Hub marks this type as a conversion hub.

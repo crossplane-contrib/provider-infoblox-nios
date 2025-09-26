@@ -27,10 +27,13 @@ type RecordInitParameters struct {
 	// Extensible attributes of the A-record to be added/updated, as a map in JSON format
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
 
+	// The parent network block's extensible attributes (dynamic allocation). For static allocation, leave this field empty.
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
+
 	// FQDN for the A-record.
 	Fqdn *string `json:"fqdn,omitempty" tf:"fqdn,omitempty"`
 
-	// IP address to associate with the A-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fields.
+	// IP address to associate with the A-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fieldsor 'filter_params' and optional 'network_view' fields.
 	IPAddr *string `json:"ipAddr,omitempty" tf:"ip_addr,omitempty"`
 
 	// Network view to use when allocating an IP address from a network dynamically. For static allocation, leave this field empty.
@@ -54,16 +57,24 @@ type RecordObservation struct {
 	// Extensible attributes of the A-record to be added/updated, as a map in JSON format
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
 
+	// The parent network block's extensible attributes (dynamic allocation). For static allocation, leave this field empty.
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
+
 	// FQDN for the A-record.
 	Fqdn *string `json:"fqdn,omitempty" tf:"fqdn,omitempty"`
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
-	// IP address to associate with the A-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fields.
+	// IP address to associate with the A-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fieldsor 'filter_params' and optional 'network_view' fields.
 	IPAddr *string `json:"ipAddr,omitempty" tf:"ip_addr,omitempty"`
+
+	InternalID *string `json:"internalId,omitempty" tf:"internal_id,omitempty"`
 
 	// Network view to use when allocating an IP address from a network dynamically. For static allocation, leave this field empty.
 	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
+
+	// NIOS object's reference, not to be set by a user.
+	Ref *string `json:"ref,omitempty" tf:"ref,omitempty"`
 
 	// TTL value for the A-record.
 	TTL *float64 `json:"ttl,omitempty" tf:"ttl,omitempty"`
@@ -87,11 +98,15 @@ type RecordParameters struct {
 	// +kubebuilder:validation:Optional
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
 
+	// The parent network block's extensible attributes (dynamic allocation). For static allocation, leave this field empty.
+	// +kubebuilder:validation:Optional
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
+
 	// FQDN for the A-record.
 	// +kubebuilder:validation:Optional
 	Fqdn *string `json:"fqdn,omitempty" tf:"fqdn,omitempty"`
 
-	// IP address to associate with the A-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fields.
+	// IP address to associate with the A-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fieldsor 'filter_params' and optional 'network_view' fields.
 	// +kubebuilder:validation:Optional
 	IPAddr *string `json:"ipAddr,omitempty" tf:"ip_addr,omitempty"`
 

@@ -282,6 +282,11 @@ spec:
                     type: string
                   id:
                     type: string
+                  internalId:
+                    type: string
+                  ref:
+                    description: NIOS object's reference, not to be set by a user.
+                    type: string
                 type: object
               conditions:
                 description: Conditions of the resource.

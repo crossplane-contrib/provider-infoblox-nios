@@ -62,6 +62,8 @@ type PTRObservation struct {
 	// IPv4/IPv6 address for record creation. Set the field with valid IP for static allocation. If to be dynamically allocated set cidr field
 	IPAddr *string `json:"ipAddr,omitempty" tf:"ip_addr,omitempty"`
 
+	InternalID *string `json:"internalId,omitempty" tf:"internal_id,omitempty"`
+
 	// Network view name of NIOS server.
 	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
 
@@ -70,6 +72,9 @@ type PTRObservation struct {
 
 	// The name of the DNS PTR record in FQDN format
 	RecordName *string `json:"recordName,omitempty" tf:"record_name,omitempty"`
+
+	// NIOS object's reference, not to be set by a user.
+	Ref *string `json:"ref,omitempty" tf:"ref,omitempty"`
 
 	// TTL attribute value for the record.
 	TTL *float64 `json:"ttl,omitempty" tf:"ttl,omitempty"`

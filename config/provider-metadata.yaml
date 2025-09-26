@@ -1,39 +1,62 @@
 name: infobloxopen/infoblox
 resources:
-    infoblox_a_record Resource - terraform-provider-infoblox:
+    infoblox_a_record Resource - infoblox:
         subCategory: ""
-        name: infoblox_a_record Resource - terraform-provider-infoblox
-        title: infoblox_a_record Resource - terraform-provider-infoblox
+        name: infoblox_a_record Resource - infoblox
+        title: infoblox_a_record Resource - infoblox
         argumentDocs:
             cidr: (String) Network to allocate an IP address from, when the 'ip_addr' field is empty (dynamic allocation). The address is in CIDR format. For static allocation, leave this field empty.
             comment: (String) Description of the A-record.
             dns_view: (String) DNS view which the zone does exist within.
             ext_attrs: (String) Extensible attributes of the A-record to be added/updated, as a map in JSON format
+            filter_params: (String) The parent network block's extensible attributes (dynamic allocation). For static allocation, leave this field empty.
             fqdn: (String) FQDN for the A-record.
             id: (String) The ID of this resource.
-            ip_addr: (String) IP address to associate with the A-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fields.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            ip_addr: (String) IP address to associate with the A-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fieldsor 'filter_params' and optional 'network_view' fields.
             network_view: (String) Network view to use when allocating an IP address from a network dynamically. For static allocation, leave this field empty.
+            ref: (String) NIOS object's reference, not to be set by a user.
             ttl: (Number) TTL value for the A-record.
         importStatements: []
-    infoblox_aaaa_record Resource - terraform-provider-infoblox:
+    infoblox_aaaa_record Resource - infoblox:
         subCategory: ""
-        name: infoblox_aaaa_record Resource - terraform-provider-infoblox
-        title: infoblox_aaaa_record Resource - terraform-provider-infoblox
+        name: infoblox_aaaa_record Resource - infoblox
+        title: infoblox_aaaa_record Resource - infoblox
         argumentDocs:
-            cidr: (String) The network address in cidr format under which record has to be created.
-            comment: (String) A description about AAAA record.
-            dns_view: (String) Dns View under which the zone has been created.
-            ext_attrs: (String) The Extensible attributes of AAAA record to be added/updated, as a map in JSON format
-            fqdn: (String) The name of the AAAA record in FQDN format.
+            cidr: (String) Network to allocate an IP address from, when the 'ipv6_addr' field is empty (dynamic allocation). The address is in CIDR format. For static allocation, leave this field empty.
+            comment: (String) Description of the AAAA-record.
+            dns_view: (String) DNS view which the zone does exist within.
+            ext_attrs: (String) Extensible attributes of the AAAA-record to be added/updated, as a map in JSON format
+            filter_params: (String) The parent network block's extensible attributes (dynamic allocation). For static allocation, leave this field empty.
+            fqdn: (String) FQDN for the AAAA-record.
             id: (String) The ID of this resource.
-            ipv6_addr: (String) IPv6 address for record creation. Set the field with valid IP for static allocation. If to be dynamically allocated set cidr field
-            network_view: (String) Network view name of NIOS server.
-            ttl: (Number) TTL attribute value for the record.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            ipv6_addr: (String) IP address to associate with the AAAA-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fieldsor 'filter_params' and optional 'network_view' fields.
+            network_view: (String) Network view to use when allocating an IP address from a network dynamically. For static allocation, leave this field empty.
+            ref: (String) NIOS object's reference, not to be set by a user.
+            ttl: (Number) TTL value for the AAAA-record.
         importStatements: []
-    infoblox_cname_record Resource - terraform-provider-infoblox:
+    infoblox_alias_record Resource - infoblox:
         subCategory: ""
-        name: infoblox_cname_record Resource - terraform-provider-infoblox
-        title: infoblox_cname_record Resource - terraform-provider-infoblox
+        name: infoblox_alias_record Resource - infoblox
+        title: infoblox_alias_record Resource - infoblox
+        argumentDocs:
+            comment: (String) Comment for the alias record.
+            disable: (Boolean) A boolean flag which indicates if the alias record is disabled.
+            dns_view: (String) Name of the DNS view in which the alias record is created.
+            ext_attrs: (String) Extensible attributes of the  Alias Record to be added/updated, as a map in JSON format
+            id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            name: (String) Name of the alias record.
+            ref: (String) NIOS object's reference, not to be set by a user.
+            target_name: (String) Target name in FQDN format.
+            target_type: (String) Type of the target object.
+            ttl: (Number) The Time To Live (TTL) value for record. A 32-bit unsigned integer that represents the duration, in seconds, for which the record is valid (cached). Zero indicates that the record should not be cached.
+        importStatements: []
+    infoblox_cname_record Resource - infoblox:
+        subCategory: ""
+        name: infoblox_cname_record Resource - infoblox
+        title: infoblox_cname_record Resource - infoblox
         argumentDocs:
             alias: (String) The alias name in FQDN format.
             canonical: (String) The Canonical name in FQDN format.
@@ -41,22 +64,120 @@ resources:
             dns_view: (String) Dns View under which the zone has been created.
             ext_attrs: (String) The Extensible attributes of CNAME record, as a map in JSON format
             id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            ref: (String) NIOS object's reference, not to be set by a user.
             ttl: (Number) TTL attribute value for the record.
         importStatements: []
-    infoblox_ip_allocation Resource - terraform-provider-infoblox:
+    infoblox_dns_view Resource - infoblox:
         subCategory: ""
-        name: infoblox_ip_allocation Resource - terraform-provider-infoblox
-        title: infoblox_ip_allocation Resource - terraform-provider-infoblox
+        name: infoblox_dns_view Resource - infoblox
+        title: infoblox_dns_view Resource - infoblox
         argumentDocs:
-            allocated_ipv4_addr: (String) Value which comes from 'ipv4_addr' (if specified) or from auto-allocation function (using 'ipv4_cidr').
-            allocated_ipv6_addr: (String) Value which comes from 'ipv6_addr' (if specified) or from auto-allocation function (using 'ipv6_cidr').
+            comment: (String) Comment for the DNS View object; maximum 256 characters.
+            ext_attrs: (String) The Extensible attributes of the DNS view to be added/updated, as a map in JSON format
+            id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            name: (String) The name of the DNS View to be specified
+            network_view: (String) The name of the Network View in which DNS View exists.
+            ref: (String) NIOS object's reference, not to be set by a user.
+        importStatements: []
+    infoblox_dtc_lbdn Resource - infoblox:
+        subCategory: ""
+        name: infoblox_dtc_lbdn Resource - infoblox
+        title: infoblox_dtc_lbdn Resource - infoblox
+        argumentDocs:
+            auth_zones: (Block List) List of linked auth zones with their respective views. (see below for nested schema)
+            auto_consolidated_monitors: (Boolean) Flag for enabling auto managing DTC Consolidated Monitors on related DTC Pools.
+            comment: (String) Description of the DTC LBDN record.
+            disable: (Boolean) Determines whether the DTC LBDN is disabled or not. When this is set to False, the fixed address is enabled.
+            dns_view: (String) The DNS view in which the zone is available.
+            ext_attrs: (String) Extensible attributes of the DTC LBDN record to be added/updated, as a map in JSON format.
+            fqdn: (String) Fully qualified domain name of an Authoritative zone.
+            id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            lb_method: (String) The load balancing method. Used to select pool. Valid values are GLOBAL_AVAILABILITY, RATIO, ROUND_ROBIN, SOURCE_IP_HASH and TOPOLOGY.
+            name: (String) The display name of the DTC LBDN.
+            patterns: (List of String) LBDN wildcards for pattern match.
+            persistence: (Number) Maximum time, in seconds, for which client specific LBDN responses will be cached. Zero specifies no caching.
+            pool: (String) The pool to link with.
+            pools: (Block List) Pools associated with the LBDN are collections of load-balanced servers (see below for nested schema)
+            priority: (Number) The LBDN pattern match priority for “overlapping” DTC LBDN objects. LBDNs are “overlapping” if they are simultaneously assigned to a zone and have patterns that can match the same FQDN. The matching LBDN with highest priority (lowest ordinal) will be used.
+            ratio: (Number) The weight of pool.
+            ref: (String) NIOS object's reference, not to be set by a user.
+            topology: (String) The topology rules for TOPOLOGY method.
+            ttl: (Number) The Time To Live (TTL) value for the DTC LBDN. A 32-bit unsigned integer that represents the duration, in seconds, for which the record is valid (cached). Zero indicates that the record should not be cached.
+            types: (List of String) The list of resource record types supported by LBDN. Valid values are A, AAAA, CNAME, NAPTR, SRV. Default value is A and AAAA
+        importStatements: []
+    infoblox_dtc_pool Resource - infoblox:
+        subCategory: ""
+        name: infoblox_dtc_pool Resource - infoblox
+        title: infoblox_dtc_pool Resource - infoblox
+        argumentDocs:
+            auto_consolidated_monitors: (Boolean) Flag for enabling auto managing DTC Consolidated Monitors in DTC Pool.
+            availability: (String) A resource in the pool is available if ANY, at least QUORUM, or ALL monitors for the pool say that it is up.
+            comment: (String) Description of the Dtc pool.
+            consolidated_monitors: (Block List) List of monitors and associated members statuses of which are shared across members and consolidated in server availability determination. (see below for nested schema)
+            disable: (Boolean) Determines if the zone is disabled or not.
+            ext_attrs: (String) Extensible attributes of the  Dtc Pool to be added/updated, as a map in JSON format
+            full_health_communication: (Boolean) Flag for switching health performing and sharing behavior to perform health checks on each DTC grid member that serves related LBDN(s) and send them across all DTC grid members from both selected and non-selected lists.
+            id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            lb_alternate_method: (String) The alternate load balancing method. Use this to select a method type from the pool if the preferred method does not return any results.
+            lb_alternate_topology: (String) The alternate topology for load balancing.
+            lb_dynamic_ratio_alternate: (String) The DTC Pool settings for dynamic ratio when it’s selected as alternate method.
+            lb_dynamic_ratio_preferred: (String) The DTC Pool settings for dynamic ratio when it’s selected as preferred method.
+            lb_preferred_method: (String) Load Balancing Preferred Method of the DTC pool.
+            lb_preferred_topology: (String) The preferred topology for load balancing.
+            members: (List of String) Members whose monitor statuses are shared across other members in a pool
+            monitor_name: (String) The name of the monitor
+            monitor_type: (String) The type of the monitor
+            monitors: (Block List) Monitors associated with the DTC pool. (see below for nested schema)
+            name: (String) Name of the DTC pool.
+            quorum: (Number) For availability mode QUORUM, at least this many monitors must report the resource as up for it to be available
+            ratio: (Number) The weight of server.
+            ref: (String) NIOS object's reference, not to be set by a user.
+            server: (String) The name of the server for the pool
+            servers: (Block List) Servers of the DTC pool. (see below for nested schema)
+            ttl: (Number) TTL value for the Dtc Pool.
+        importStatements: []
+    infoblox_dtc_server Resource - infoblox:
+        subCategory: ""
+        name: infoblox_dtc_server Resource - infoblox
+        title: infoblox_dtc_server Resource - infoblox
+        argumentDocs:
+            auto_create_host_record: (Boolean) Enabling this option will auto-create a single read-only A/AAAA/CNAME record corresponding to the configured hostname and update it if the hostname changes.
+            comment: (String) Description of the Dtc server.
+            disable: (Boolean) Determines if the zone is disabled or not.
+            ext_attrs: (String) Extensible attributes of the  Dtc Server to be added/updated, as a map in JSON format
+            host: (String) The address or FQDN of the server.
+            id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            monitor_name: (String) The monitor name related to server.
+            monitor_type: (String) The monitor type related to server.
+            monitors: (Block List) List of IP/FQDN and monitor pairs to be used for additional monitoring. (see below for nested schema)
+            name: (String) The DTC Server display name.
+            ref: (String) NIOS object's reference, not to be set by a user.
+            sni_hostname: (String) The hostname for Server Name Indication (SNI) in FQDN format.
+            use_sni_hostname: '(Boolean) Use flag for: sni_hostname'
+        importStatements: []
+    infoblox_ip_allocation Resource - infoblox:
+        subCategory: ""
+        name: infoblox_ip_allocation Resource - infoblox
+        title: infoblox_ip_allocation Resource - infoblox
+        argumentDocs:
+            aliases: (List of String) A set of IP allocation aliases
+            allocated_ipv4_addr: (String) Value which comes from 'ipv4_addr' (if specified) or from auto-allocation function (using 'ipv4_cidr' or 'filter_params').
+            allocated_ipv6_addr: (String) Value which comes from 'ipv6_addr' (if specified) or from auto-allocation function (using 'ipv6_cidr' or 'filter_params').
             comment: (String) A description of IP address allocation.
+            disable: (Boolean) Disables the Host record if set to 'true'.
             dns_view: (String) DNS view under which the zone has been created.
             enable_dns: (Boolean) flag that defines if the host record is to be used for DNS purposes.
             ext_attrs: (String) The extensible attributes for IP address allocation, as a map in JSON format
+            filter_params: (String) The parent network block's extensible attributes. This field is used for dynamic allocation along with 'ip_address_type' field.
             fqdn: (String) The host name for Host Record in FQDN format.
             id: (String) The ID of this resource.
             internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            ip_address_type: '(String) The type of IP address to allocate. This filed is used only when ''filter_params'' field is used. Valid values are: IPV4, IPV6, Both. Default value is IPV4'
             ipv4_addr: (String) IPv4 address of cloud instance.Set a valid IP address for static allocation and leave empty if dynamically allocated.
             ipv4_cidr: (String) The IPv4 cidr from which an IPv4 address will be allocated.
             ipv6_addr: (String) IPv6 address of cloud instance.Set a valid IP address for static allocation and leave empty if dynamically allocated.
@@ -65,10 +186,10 @@ resources:
             ref: (String) NIOS object's reference, not to be set by a user.
             ttl: (Number) TTL attribute value for the record.
         importStatements: []
-    infoblox_ip_association Resource - terraform-provider-infoblox:
+    infoblox_ip_association Resource - infoblox:
         subCategory: ""
-        name: infoblox_ip_association Resource - terraform-provider-infoblox
-        title: infoblox_ip_association Resource - terraform-provider-infoblox
+        name: infoblox_ip_association Resource - infoblox
+        title: infoblox_ip_association Resource - infoblox
         argumentDocs:
             duid: (String) DHCP unique identifier for IPv6.
             enable_dhcp: (Boolean) The flag which defines if the host record is to be used for IPAM purposes.
@@ -77,200 +198,335 @@ resources:
             mac_addr: (String) MAC address of a cloud instance.
             ref: (String) NIOS object's reference, not to be set by a user.
         importStatements: []
-    infoblox_ipv4_allocation Resource - terraform-provider-infoblox:
+    infoblox_ipv4_fixed_address Resource - infoblox:
         subCategory: ""
-        name: infoblox_ipv4_allocation Resource - terraform-provider-infoblox
-        title: infoblox_ipv4_allocation Resource - terraform-provider-infoblox
+        name: infoblox_ipv4_fixed_address Resource - infoblox
+        title: infoblox_ipv4_fixed_address Resource - infoblox
         argumentDocs:
-            cidr: (String) The address in cidr format.
-            comment: (String) A description of IP address allocation.
-            dns_view: (String) Dns View under which the zone has been created.
-            enable_dns: (Boolean) flag that defines if the host record is to be used for DNS Purposes.
-            ext_attrs: (String) The extensible attributes for IP address allocation, as a map in JSON format
-            fqdn: (String) The host name for Host Record in FQDN format.
+            agent_circuit_id: (String) The agent circuit ID for the fixed address.
+            agent_remote_id: (String) The agent remote ID for the fixed address.
+            client_identifier_prepend_zero: (Boolean) This field controls whether there is a prepend for the dhcp-client-identifier of a fixed address.
+            comment: (String) Comment for the fixed address; maximum 256 characters.
+            dhcp_client_identifier: (String) The DHCP client ID for the fixed address. The field is required only when match_client is set to CLIENT_ID.
+            disable: (Boolean) Determines whether a fixed address is disabled or not. When this is set to False, the fixed address is enabled.
+            ext_attrs: (String) Extensible attributes of the A-record to be added/updated, as a map in JSON format
             id: (String) The ID of this resource.
-            ip_addr: (String) IP address of cloud instance.Set a valid IP for static allocation and leave empty if dynamically allocated.
-            network_view: (String) Network view name of NIOS server.
-            ttl: (Number) TTL attribute value for the record.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            ipv4addr: (String) The IPv4 Address of the fixed address.
+            mac: (String) The MAC address value for this fixed address.
+            match_client: (String) The match client for the fixed address.Valid values are CIRCUIT_ID, CLIENT_ID , MAC_ADDRESS, REMOTE_ID and RESERVED
+            name: (String) This field contains the name of this fixed address.
+            network: (String) The network to which this fixed address belongs, in IPv4 Address/CIDR format.
+            network_view: (String) The name of the network view in which this fixed address resides.
+            num: (Number) The code of the DHCP option.
+            options: (Block List) An array of DHCP option structs that lists the DHCP options associated with the object. An option sets thevalue of a DHCP option that has been defined in an option space. DHCP options describe network configuration settingsand various services available on the network. These options occur as variable-length fields at the end of DHCP messages.When defining a DHCP option, at least a ‘name’ or a ‘num’ is required. (see below for nested schema)
+            ref: (String) NIOS object's reference, not to be set by a user.
+            use_option: '(Boolean) Only applies to special options that are displayed separately from other options and have a use flag. These options are: routers, router-templates, domain-name-servers, domain-name, broadcast-address, broadcast-address-offset, dhcp-lease-time, dhcp6.name-servers'
+            use_options: (Boolean) Use option is a flag that indicates whether the options field are used or not.
+            value: (String) Value of the DHCP option.
+            vendor_class: (String) The name of the space this DHCP option is associated to.
         importStatements: []
-    infoblox_ipv4_association Resource - terraform-provider-infoblox:
+    infoblox_ipv4_network Resource - infoblox:
         subCategory: ""
-        name: infoblox_ipv4_association Resource - terraform-provider-infoblox
-        title: infoblox_ipv4_association Resource - terraform-provider-infoblox
-        argumentDocs:
-            cidr: (String) The address in cidr format.
-            comment: (String) A description of the IP association.
-            dns_view: (String) view in which record has to be created.
-            duid: (String) DHCP unique identifier for IPv6.
-            enable_dhcp: (Boolean) flag that defines if the host record is to be used for IPAM Purposes.
-            enable_dns: (Boolean) flag that defines if the host record is to be used for DNS Purposes
-            ext_attrs: (String) The Extensible attributes for IP Association, as a map in JSON format
-            fqdn: (String) The host name for Host Record in FQDN format.
-            id: (String) The ID of this resource.
-            ip_addr: (String) IP address of cloud instance.
-            mac_addr: (String) mac address of cloud instance.
-            network_view: (String) Network view name of NIOS server.
-            ttl: (Number) TTL attribute value for the record.
-        importStatements: []
-    infoblox_ipv4_network Resource - terraform-provider-infoblox:
-        subCategory: ""
-        name: infoblox_ipv4_network Resource - terraform-provider-infoblox
-        title: infoblox_ipv4_network Resource - terraform-provider-infoblox
+        name: infoblox_ipv4_network Resource - infoblox
+        title: infoblox_ipv4_network Resource - infoblox
         argumentDocs:
             allocate_prefix_len: (Number) Set the parameter's value > 0 to allocate next available network with corresponding prefix length from the network container defined by 'parent_cidr'
             cidr: (String) The network block in cidr format.
             comment: (String) A string describing the network
-            ext_attrs: (String) The Extensible attributes of the Network, as a map in JSON format
+            ext_attrs: (String) The Extensible attributes of the Network
+            filter_params: (String) The parent network/network-container block's extensible attributes.
             gateway: (String) Gateway's IP address of the network. By default, the first IP address is set as gateway address; if the value is 'none' then the network has no gateway.
             id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
             network_view: (String) Network view name available in NIOS Server.
+            object: (String) The parent object from which the network will be allocated. Valid values are 'networkcontainer' and 'network'. Default value is 'networkcontainer'.
             parent_cidr: (String) The parent network container block in cidr format to allocate from.
+            ref: (String) NIOS object's reference, not to be set by a user.
             reserve_ip: (Number) The number of IP's you want to reserve in IPv4 Network.
             reserve_ipv6: (Number) The number of IP's you want to reserve in IPv6 Network
         importStatements: []
-    infoblox_ipv4_network_container Resource - terraform-provider-infoblox:
+    infoblox_ipv4_network_container Resource - infoblox:
         subCategory: ""
-        name: infoblox_ipv4_network_container Resource - terraform-provider-infoblox
-        title: infoblox_ipv4_network_container Resource - terraform-provider-infoblox
+        name: infoblox_ipv4_network_container Resource - infoblox
+        title: infoblox_ipv4_network_container Resource - infoblox
         argumentDocs:
             allocate_prefix_len: (Number) Set the parameter's value > 0 to allocate next available network container with corresponding prefix length from the network container defined by 'parent_cidr'
             cidr: (String) The network container's address, in CIDR format.
             comment: (String) A description of the network container.
             ext_attrs: (String) The Extensible attributes of the network container to be added/updated, as a map in JSON format
+            filter_params: (String) The parent network/network-container block's extensible attributes.
             id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
             network_view: (String) The name of network view for the network container.
             parent_cidr: (String) The parent network container block in CIDR format to allocate from.
+            ref: (String) NIOS object's reference, not to be set by a user.
         importStatements: []
-    infoblox_ipv6_allocation Resource - terraform-provider-infoblox:
+    infoblox_ipv4_range Resource - infoblox:
         subCategory: ""
-        name: infoblox_ipv6_allocation Resource - terraform-provider-infoblox
-        title: infoblox_ipv6_allocation Resource - terraform-provider-infoblox
+        name: infoblox_ipv4_range Resource - infoblox
+        title: infoblox_ipv4_range Resource - infoblox
         argumentDocs:
-            cidr: (String) The address in cidr format.
-            comment: (String) A description of IP address allocation.
-            dns_view: (String) Dns View under which the zone has been created.
-            enable_dns: (Boolean) flag that defines if the host record is to be used for DNS Purposes.
-            ext_attrs: (String) The extensible attributes for IP address allocation, as a map in JSON format
-            fqdn: (String) The host name for Host Record in FQDN format.
+            comment: (String) Comment for the range; maximum 256 characters.
+            disable: (Boolean) Determines whether a range is disabled or not. When this is set to False, the range is enabled.
+            end_addr: (String) The IPv4 Address end address of the range.
+            ext_attrs: (String) Extensible attributes of the range to be added/updated, as a map in JSON format.
+            failover_association: '(String) TThe name of the failover association: the server in this failover association will serve the IPv4 range in case the main server is out of service.'
             id: (String) The ID of this resource.
-            ip_addr: (String) IP address of cloud instance.Set a valid IP for static allocation and leave empty if dynamically allocated.
-            network_view: (String) Network view name of NIOS server.
-            ttl: (Number) TTL attribute value for the record.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            member: (Map of String) The member that will provide service for this range. server_association_type needs to be set to ‘MEMBER’ if you wantthe server specified here to serve the range.
+            ms_server: (String) The Microsoft server that will provide service for this range. server_association_type needs to be set to MS_SERVER +if you want the server specified here to serve the range. For searching by this field you should use a HTTP method that contains abody (POST or PUT) with MS DHCP server structure and the request should have option _method=GET.
+            name: (String) Name of the range.
+            network: (String) The network to which this range belongs, in IPv4 Address/CIDR format.
+            network_view: (String) The name of the network view in which this range resides.
+            num: (Number) The code of the DHCP option.
+            options: (Block List) An array of DHCP option structs that lists the DHCP options associated with the object. An option sets thevalue of a DHCP option that has been defined in an option space. DHCP options describe network configuration settingsand various services available on the network. These options occur as variable-length fields at the end of DHCP messages.When defining a DHCP option, at least a ‘name’ or a ‘num’ is required. (see below for nested schema)
+            ref: (String) NIOS object's reference, not to be set by a user.
+            server_association_type: '(String) The type of server that is going to serve the range. The valid values are: ''FAILOVER'', ''MEMBER'', ''NONE''.''MS_FAILOVER'',''MS_SERVER'''
+            start_addr: (String) The IPv4 Address starting address of the range.
+            template: (String) If set on creation, the range will be created according to the values specified in the named template.
+            use_option: '(Boolean) Only applies to special options that are displayed separately from other options and have a use flag. These options are: routers, router-templates, domain-name-servers, domain-name, broadcast-address, broadcast-address-offset, dhcp-lease-time, dhcp6.name-servers'
+            use_options: (Boolean) Use flag for options.
+            value: (String) Value of the DHCP option.
+            vendor_class: (String) The name of the space this DHCP option is associated to.
         importStatements: []
-    infoblox_ipv6_association Resource - terraform-provider-infoblox:
+    infoblox_ipv4_range_template Resource - infoblox:
         subCategory: ""
-        name: infoblox_ipv6_association Resource - terraform-provider-infoblox
-        title: infoblox_ipv6_association Resource - terraform-provider-infoblox
+        name: infoblox_ipv4_range_template Resource - infoblox
+        title: infoblox_ipv4_range_template Resource - infoblox
         argumentDocs:
-            cidr: (String) The address in cidr format.
-            comment: (String) A description of the IP association.
-            dns_view: (String) view in which record has to be created.
-            duid: (String) DHCP unique identifier for IPv6.
-            enable_dhcp: (Boolean) flag that defines if the host record is to be used for IPAM Purposes.
-            enable_dns: (Boolean) flag that defines if the host record is to be used for DNS Purposes
-            ext_attrs: (String) The Extensible attributes for IP Association, as a map in JSON format
-            fqdn: (String) The host name for Host Record in FQDN format.
+            cloud_api_compatible: (Boolean) This flag controls whether this template can be used to create network objects in a cloud-computing deployment.
+            comment: (String) Comment for the Range Template record.
+            ext_attrs: (String) Extensible attributes of the  Range Template Record to be added/updated, as a map in JSON format
+            failover_association: '(String) The name of the failover association: the server in this failover association will serve the IPv4 range in case the main server is out of service. server_association_type must be set to ‘FAILOVER’ or ‘FAILOVER_MS’ if you want the failover association specified here to serve the range.'
             id: (String) The ID of this resource.
-            ip_addr: (String) IP address of cloud instance.
-            mac_addr: (String) mac address of cloud instance.
-            network_view: (String) Network view name of NIOS server.
-            ttl: (Number) TTL attribute value for the record.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            member: (Map of String) The member that will provide service for this range. server_association_type needs to be set to ‘MEMBER’ if you wantthe server specified here to serve the range.
+            ms_server: (String) The Microsoft server that will provide service for this range. server_association_type needs to be set to MS_SERVER +if you want the server specified here to serve the range. For searching by this field you should use a HTTP method that contains abody (POST or PUT) with MS DHCP server structure and the request should have option _method=GET.
+            name: (String) Name of the Range Template record.
+            num: (Number) The code of the DHCP option.
+            number_of_addresses: (Number) The number of addresses for this range.
+            offset: (Number) The start address offset for the range.
+            options: (Block List) An array of DHCP option structs that lists the DHCP options associated with the object. An option sets thevalue of a DHCP option that has been defined in an option space. DHCP options describe network configuration settingsand various services available on the network. These options occur as variable-length fields at the end of DHCP messages.When defining a DHCP option, at least a ‘name’ or a ‘num’ is required. (see below for nested schema)
+            ref: (String) NIOS object's reference, not to be set by a user.
+            server_association_type: '(String) The type of server that is going to serve the range. Valid values are: FAILOVER, MEMBER, MS_FAILOVER, MS_SERVER, NONE. Default value is NONE'
+            use_option: '(Boolean) Only applies to special options that are displayed separately from other options and have a use flag. These options are: routers, router-templates, domain-name-servers, domain-name, broadcast-address, broadcast-address-offset, dhcp-lease-time, dhcp6.name-servers'
+            use_options: (Boolean) Use flag for options.
+            value: (String) Value of the DHCP option.
+            vendor_class: (String) The name of the space this DHCP option is associated to.
         importStatements: []
-    infoblox_ipv6_network Resource - terraform-provider-infoblox:
+    infoblox_ipv4_shared_network Resource - infoblox:
         subCategory: ""
-        name: infoblox_ipv6_network Resource - terraform-provider-infoblox
-        title: infoblox_ipv6_network Resource - terraform-provider-infoblox
+        name: infoblox_ipv4_shared_network Resource - infoblox
+        title: infoblox_ipv4_shared_network Resource - infoblox
+        argumentDocs:
+            comment: (String) The comment for the IPv4 shared network object.
+            disable: (Boolean) The disable flag for the IPv4 shared network object.
+            ext_attrs: (String) Extensible attributes of the IPv4 Shared Network record to be added/updated, as a map in JSON format.
+            id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            name: (String) The name of the IPv4 shared network object.
+            network_view: (String) The name of the network view in which this shared network resides.
+            networks: (List of String) A list of networks belonging to the shared network
+            num: (Number) The code of the DHCP option.
+            options: (Block List) An array of DHCP option structs that lists the DHCP options associated with the object. An option sets thevalue of a DHCP option that has been defined in an option space. DHCP options describe network configuration settingsand various services available on the network. These options occur as variable-length fields at the end of DHCP messages.When defining a DHCP option, at least a ‘name’ or a ‘num’ is required. (see below for nested schema)
+            ref: (String) NIOS object's reference, not to be set by a user.
+            use_option: '(Boolean) Only applies to special options that are displayed separately from other options and have a use flag. These options are: routers, router-templates, domain-name-servers, domain-name, broadcast-address, broadcast-address-offset, dhcp-lease-time, dhcp6.name-servers'
+            use_options: (Boolean) Use flag for options.
+            value: (String) Value of the DHCP option.
+            vendor_class: (String) The name of the space this DHCP option is associated to.
+        importStatements: []
+    infoblox_ipv6_network Resource - infoblox:
+        subCategory: ""
+        name: infoblox_ipv6_network Resource - infoblox
+        title: infoblox_ipv6_network Resource - infoblox
         argumentDocs:
             allocate_prefix_len: (Number) Set the parameter's value > 0 to allocate next available network with corresponding prefix length from the network container defined by 'parent_cidr'
             cidr: (String) The network block in cidr format.
             comment: (String) A string describing the network
-            ext_attrs: (String) The Extensible attributes of the Network, as a map in JSON format
+            ext_attrs: (String) The Extensible attributes of the Network
+            filter_params: (String) The parent network/network-container block's extensible attributes.
             gateway: (String) Gateway's IP address of the network. By default, the first IP address is set as gateway address; if the value is 'none' then the network has no gateway.
             id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
             network_view: (String) Network view name available in NIOS Server.
+            object: (String) The parent object from which the network will be allocated. Valid values are 'networkcontainer' and 'network'. Default value is 'networkcontainer'.
             parent_cidr: (String) The parent network container block in cidr format to allocate from.
+            ref: (String) NIOS object's reference, not to be set by a user.
             reserve_ip: (Number) The number of IP's you want to reserve in IPv4 Network.
             reserve_ipv6: (Number) The number of IP's you want to reserve in IPv6 Network
         importStatements: []
-    infoblox_ipv6_network_container Resource - terraform-provider-infoblox:
+    infoblox_ipv6_network_container Resource - infoblox:
         subCategory: ""
-        name: infoblox_ipv6_network_container Resource - terraform-provider-infoblox
-        title: infoblox_ipv6_network_container Resource - terraform-provider-infoblox
+        name: infoblox_ipv6_network_container Resource - infoblox
+        title: infoblox_ipv6_network_container Resource - infoblox
         argumentDocs:
             allocate_prefix_len: (Number) Set the parameter's value > 0 to allocate next available network container with corresponding prefix length from the network container defined by 'parent_cidr'
             cidr: (String) The network container's address, in CIDR format.
             comment: (String) A description of the network container.
             ext_attrs: (String) The Extensible attributes of the network container to be added/updated, as a map in JSON format
+            filter_params: (String) The parent network/network-container block's extensible attributes.
             id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
             network_view: (String) The name of network view for the network container.
             parent_cidr: (String) The parent network container block in CIDR format to allocate from.
+            ref: (String) NIOS object's reference, not to be set by a user.
         importStatements: []
-    infoblox_mx_record Resource - terraform-provider-infoblox:
+    infoblox_mx_record Resource - infoblox:
         subCategory: ""
-        name: infoblox_mx_record Resource - terraform-provider-infoblox
-        title: infoblox_mx_record Resource - terraform-provider-infoblox
+        name: infoblox_mx_record Resource - infoblox
+        title: infoblox_mx_record Resource - infoblox
         argumentDocs:
             comment: (String) Description of the MX-Record.
             dns_view: (String) DNS view which the zone does exist within
             ext_attrs: (String) Extensible attributes of the MX-record to be added/updated, as a map in JSON format.
             fqdn: (String) FQDN for the MX-record.
             id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
             mail_exchanger: (String) A record used to specify mail server.
             preference: (Number) Configures the preference (0-65535) for this MX-record.
+            ref: (String) NIOS object's reference, not to be set by a user.
             ttl: (Number) TTL value for the MX-record.
         importStatements: []
-    infoblox_network_view Resource - terraform-provider-infoblox:
+    infoblox_network_view Resource - infoblox:
         subCategory: ""
-        name: infoblox_network_view Resource - terraform-provider-infoblox
-        title: infoblox_network_view Resource - terraform-provider-infoblox
+        name: infoblox_network_view Resource - infoblox
+        title: infoblox_network_view Resource - infoblox
         argumentDocs:
             comment: (String) A description of the network view.
             ext_attrs: (String) The Extensible attributes of the network container to be added/updated, as a map in JSON format
             id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
             name: (String) Specifies the desired name of the network view as shown in the NIOS appliance. The name has the same requirements as the corresponding parameter in WAPI.
+            ref: (String) NIOS object's reference, not to be set by a user.
         importStatements: []
-    infoblox_ptr_record Resource - terraform-provider-infoblox:
+    infoblox_ns_record Resource - infoblox:
         subCategory: ""
-        name: infoblox_ptr_record Resource - terraform-provider-infoblox
-        title: infoblox_ptr_record Resource - terraform-provider-infoblox
+        name: infoblox_ns_record Resource - infoblox
+        title: infoblox_ns_record Resource - infoblox
+        argumentDocs:
+            address: (String) he address of the Zone Name Server.
+            addresses: '(Block List, Min: 1) The list of zone name servers. (see below for nested schema)'
+            auto_create_ptr: (Boolean) Flag to indicate if ptr records need to be auto created.
+            dns_view: '(String) The name of the DNS view in which the record resides.Example: “external”.'
+            id: (String) The ID of this resource.
+            name: (String) The name of the NS record in FQDN format. This value can be in unicode format.
+            nameserver: (String) The domain name of an authoritative server for the redirected zone.
+            ref: (String) NIOS object's reference, not to be set by a user.
+        importStatements: []
+    infoblox_ptr_record Resource - infoblox:
+        subCategory: ""
+        name: infoblox_ptr_record Resource - infoblox
+        title: infoblox_ptr_record Resource - infoblox
         argumentDocs:
             cidr: (String) The network address in cidr format under which record has to be created.
             comment: (String) A description about PTR record.
             dns_view: (String) Dns View under which the zone has been created.
             ext_attrs: (String) The Extensible attributes of PTR record to be added/updated, as a map in JSON format
             id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
             ip_addr: (String) IPv4/IPv6 address for record creation. Set the field with valid IP for static allocation. If to be dynamically allocated set cidr field
             network_view: (String) Network view name of NIOS server.
             ptrdname: (String) The domain name in FQDN to which the record should point to.
             record_name: (String) The name of the DNS PTR record in FQDN format
+            ref: (String) NIOS object's reference, not to be set by a user.
             ttl: (Number) TTL attribute value for the record.
         importStatements: []
-    infoblox_srv_record Resource - terraform-provider-infoblox:
+    infoblox_srv_record Resource - infoblox:
         subCategory: ""
-        name: infoblox_srv_record Resource - terraform-provider-infoblox
-        title: infoblox_srv_record Resource - terraform-provider-infoblox
+        name: infoblox_srv_record Resource - infoblox
+        title: infoblox_srv_record Resource - infoblox
         argumentDocs:
             comment: (String) Description of the SRV-record
             dns_view: (String) DNS view which the zone does exist within
             ext_attrs: (String) Extensible attributes of the SRV-record to be added/updated, as a map in JSON format.
             id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
             name: (String) Combination of service's name, protocol's name and zone's name
             port: (Number) Configures port number (0..65535) for this SRV-record.
             priority: (Number) Configures the priority (0..65535) for this SRV-record.
+            ref: (String) NIOS object's reference, not to be set by a user.
             target: (String) Provides service for domain name in the SRV-record.
             ttl: (Number) TTL value for the SRV-record.
             weight: (Number) Configures weight of the SRV-record, valid values are 0..65535.
         importStatements: []
-    infoblox_txt_record Resource - terraform-provider-infoblox:
+    infoblox_txt_record Resource - infoblox:
         subCategory: ""
-        name: infoblox_txt_record Resource - terraform-provider-infoblox
-        title: infoblox_txt_record Resource - terraform-provider-infoblox
+        name: infoblox_txt_record Resource - infoblox
+        title: infoblox_txt_record Resource - infoblox
         argumentDocs:
             comment: (String) Description of the TXT-record.
             dns_view: (String) DNS view in which the record's zone exists.
             ext_attrs: (String) Extensible attributes of the TXT-record to be added/updated, as a map in JSON format
             fqdn: (String) FQDN for the TXT-Record.
             id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            ref: (String) NIOS object's reference, not to be set by a user.
             text: (String) Data to be associated with TXT_Record.
             ttl: (Number) TTL value of the TXT-Record
+        importStatements: []
+    infoblox_zone_auth Resource - infoblox:
+        subCategory: ""
+        name: infoblox_zone_auth Resource - infoblox
+        title: infoblox_zone_auth Resource - infoblox
+        argumentDocs:
+            comment: (String) Comment for the zone; maximum 256 characters.
+            ext_attrs: (String) The Extensible attributes of the zone, as a map in JSON format
+            fqdn: (String) The name of this DNS zone. For a reverse zone, this is in 'address/cidr' format. For other zones, this is in FQDN format. This value can be in unicode format. Note that for a reverse zone, the corresponding zone_format value should be set.
+            id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            ns_group: (String) The name server group that serves DNS for this zone.
+            ref: (String) NIOS object's reference, not to be set by a user.
+            restart_if_needed: (Boolean) Restarts the member service.
+            soa_default_ttl: (Number) The Time to Live (TTL) value of the SOA record of this zone. This value is the number of seconds that data is cached.
+            soa_expire: (Number) This setting defines the amount of time, in seconds, after which the secondary server stops giving out answers about the zone because the zone data is too old to be useful. The default is one week.
+            soa_negative_ttl: (Number) The negative Time to Live (TTL) value of the SOA of the zone indicates how long a secondary server can cache data for 'Does Not Respond' responses.
+            soa_refresh: (Number) This indicates the interval at which a secondary server sends a message to the primary server for a zone to check that its data is current, and retrieve fresh data if it is not.
+            soa_retry: (Number) This indicates how long a secondary server must wait before attempting to recontact the primary server after a connection failure between the two servers occurs.
+            view: '(String) The name of the DNS view in which the zone resides. Example: ''external'''
+            zone_format: '(String) Determines the format of this zone. Valid values are: FORWARD, IPV4, IPV6; the default is FORWARD'
+        importStatements: []
+    infoblox_zone_delegated Resource - infoblox:
+        subCategory: ""
+        name: infoblox_zone_delegated Resource - infoblox
+        title: infoblox_zone_delegated Resource - infoblox
+        argumentDocs:
+            address: (String) The IPv4 Address or IPv6 Address of the server.
+            comment: (String) A descriptive comment.
+            delegate_to: (Block List) The Infoblox appliance redirects queries for data for the delegated zone to this remote name server. (see below for nested schema)
+            delegated_ttl: (Number) TTL value for zone-delegated.
+            disable: (Boolean) Determines if the zone is disabled or not.
+            ext_attrs: (String) Extensible attributes, as a map in JSON format
+            fqdn: (String) The FQDN of the delegated zone.
+            id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            locked: (Boolean) If you enable this flag, other administrators cannot make conflicting changes. This is for administration purposes only. The zone will continue to serve DNS data even when it is locked.
+            name: (String) A resolvable domain name for the external DNS server.
+            ns_group: (String) The delegation NS group bound with delegated zone.
+            ref: (String) NIOS object's reference, not to be set by a user.
+            view: (String) The DNS view in which the zone is created.
+            zone_format: '(String) The format of the zone. Valid values are: FORWARD, IPV4, IPV6.'
+        importStatements: []
+    infoblox_zone_forward Resource - infoblox:
+        subCategory: ""
+        name: infoblox_zone_forward Resource - infoblox
+        title: infoblox_zone_forward Resource - infoblox
+        argumentDocs:
+            address: (String) The IP address of the remote name server to which you want the Infoblox appliance to forward queries for a specified domain name.
+            comment: (String) A descriptive comment.
+            disable: (Boolean) Determines if the zone is disabled or not.
+            ext_attrs: (String) Extensible attributes of the zone forward to be added/updated, as a map in JSON format.
+            external_ns_group: (String) A forward stub server name server group.
+            forward_to: (Block List) The information for the remote name servers to which you want the Infoblox appliance to forward queries for a specified domain name. (see below for nested schema)
+            forwarders_only: (Boolean) Determines if the appliance sends queries to forwarders only, and not to other internal or Internet root servers.
+            forwarding_servers: (Block List) The information for the remote name servers to which you want the Infoblox appliance to forward queries for a specified domain name. (see below for nested schema)
+            fqdn: (String) The name of this DNS zone
+            id: (String) The ID of this resource.
+            internal_id: (String) Internal ID of an object at NIOS side, used by Infoblox Terraform plugin to search for a NIOS's object which corresponds to the Terraform resource.
+            name: (String) The name of the remote name server to which you want the Infoblox appliance to forward queries for a specified domain name.
+            ns_group: (String) A forwarding member name server group.
+            ref: (String) NIOS object's reference, not to be set by a user.
+            use_override_forwarders: (Boolean) Determines if the appliance sends queries to name servers.
+            view: (String) The DNS view in which the zone is created.
+            zone_format: '(String) The format of the zone. Valid values are: FORWARD, IPV4, IPV6.'
         importStatements: []

@@ -31,6 +31,11 @@ type ViewObservation struct {
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
+
+	InternalID *string `json:"internalId,omitempty" tf:"internal_id,omitempty"`
+
+	// NIOS object's reference, not to be set by a user.
+	Ref *string `json:"ref,omitempty" tf:"ref,omitempty"`
 }
 
 type ViewParameters struct {

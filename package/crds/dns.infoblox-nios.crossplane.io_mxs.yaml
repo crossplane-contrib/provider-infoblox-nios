@@ -331,12 +331,17 @@ spec:
                     type: string
                   id:
                     type: string
+                  internalId:
+                    type: string
                   mailExchanger:
                     description: A record used to specify mail server.
                     type: string
                   preference:
                     description: Configures the preference (0-65535) for this MX-record.
                     type: number
+                  ref:
+                    description: NIOS object's reference, not to be set by a user.
+                    type: string
                   ttl:
                     description: TTL value for the MX-record.
                     type: number

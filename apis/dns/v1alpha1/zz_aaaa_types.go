@@ -15,91 +15,106 @@ import (
 
 type AAAAInitParameters struct {
 
-	// The network address in cidr format under which record has to be created.
+	// Network to allocate an IP address from, when the 'ipv6_addr' field is empty (dynamic allocation). The address is in CIDR format. For static allocation, leave this field empty.
 	Cidr *string `json:"cidr,omitempty" tf:"cidr,omitempty"`
 
-	// A description about AAAA record.
+	// Description of the AAAA-record.
 	Comment *string `json:"comment,omitempty" tf:"comment,omitempty"`
 
-	// Dns View under which the zone has been created.
+	// DNS view which the zone does exist within.
 	DNSView *string `json:"dnsView,omitempty" tf:"dns_view,omitempty"`
 
-	// The Extensible attributes of AAAA record to be added/updated, as a map in JSON format
+	// Extensible attributes of the AAAA-record to be added/updated, as a map in JSON format
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
 
-	// The name of the AAAA record in FQDN format.
+	// The parent network block's extensible attributes (dynamic allocation). For static allocation, leave this field empty.
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
+
+	// FQDN for the AAAA-record.
 	Fqdn *string `json:"fqdn,omitempty" tf:"fqdn,omitempty"`
 
-	// IPv6 address for record creation. Set the field with valid IP for static allocation. If to be dynamically allocated set cidr field
+	// IP address to associate with the AAAA-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fieldsor 'filter_params' and optional 'network_view' fields.
 	IPv6Addr *string `json:"ipv6Addr,omitempty" tf:"ipv6_addr,omitempty"`
 
-	// Network view name of NIOS server.
+	// Network view to use when allocating an IP address from a network dynamically. For static allocation, leave this field empty.
 	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
 
-	// TTL attribute value for the record.
+	// TTL value for the AAAA-record.
 	TTL *float64 `json:"ttl,omitempty" tf:"ttl,omitempty"`
 }
 
 type AAAAObservation struct {
 
-	// The network address in cidr format under which record has to be created.
+	// Network to allocate an IP address from, when the 'ipv6_addr' field is empty (dynamic allocation). The address is in CIDR format. For static allocation, leave this field empty.
 	Cidr *string `json:"cidr,omitempty" tf:"cidr,omitempty"`
 
-	// A description about AAAA record.
+	// Description of the AAAA-record.
 	Comment *string `json:"comment,omitempty" tf:"comment,omitempty"`
 
-	// Dns View under which the zone has been created.
+	// DNS view which the zone does exist within.
 	DNSView *string `json:"dnsView,omitempty" tf:"dns_view,omitempty"`
 
-	// The Extensible attributes of AAAA record to be added/updated, as a map in JSON format
+	// Extensible attributes of the AAAA-record to be added/updated, as a map in JSON format
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
 
-	// The name of the AAAA record in FQDN format.
+	// The parent network block's extensible attributes (dynamic allocation). For static allocation, leave this field empty.
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
+
+	// FQDN for the AAAA-record.
 	Fqdn *string `json:"fqdn,omitempty" tf:"fqdn,omitempty"`
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
-	// IPv6 address for record creation. Set the field with valid IP for static allocation. If to be dynamically allocated set cidr field
+	// IP address to associate with the AAAA-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fieldsor 'filter_params' and optional 'network_view' fields.
 	IPv6Addr *string `json:"ipv6Addr,omitempty" tf:"ipv6_addr,omitempty"`
 
-	// Network view name of NIOS server.
+	InternalID *string `json:"internalId,omitempty" tf:"internal_id,omitempty"`
+
+	// Network view to use when allocating an IP address from a network dynamically. For static allocation, leave this field empty.
 	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
 
-	// TTL attribute value for the record.
+	// NIOS object's reference, not to be set by a user.
+	Ref *string `json:"ref,omitempty" tf:"ref,omitempty"`
+
+	// TTL value for the AAAA-record.
 	TTL *float64 `json:"ttl,omitempty" tf:"ttl,omitempty"`
 }
 
 type AAAAParameters struct {
 
-	// The network address in cidr format under which record has to be created.
+	// Network to allocate an IP address from, when the 'ipv6_addr' field is empty (dynamic allocation). The address is in CIDR format. For static allocation, leave this field empty.
 	// +kubebuilder:validation:Optional
 	Cidr *string `json:"cidr,omitempty" tf:"cidr,omitempty"`
 
-	// A description about AAAA record.
+	// Description of the AAAA-record.
 	// +kubebuilder:validation:Optional
 	Comment *string `json:"comment,omitempty" tf:"comment,omitempty"`
 
-	// Dns View under which the zone has been created.
+	// DNS view which the zone does exist within.
 	// +kubebuilder:validation:Optional
 	DNSView *string `json:"dnsView,omitempty" tf:"dns_view,omitempty"`
 
-	// The Extensible attributes of AAAA record to be added/updated, as a map in JSON format
+	// Extensible attributes of the AAAA-record to be added/updated, as a map in JSON format
 	// +kubebuilder:validation:Optional
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
 
-	// The name of the AAAA record in FQDN format.
+	// The parent network block's extensible attributes (dynamic allocation). For static allocation, leave this field empty.
+	// +kubebuilder:validation:Optional
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
+
+	// FQDN for the AAAA-record.
 	// +kubebuilder:validation:Optional
 	Fqdn *string `json:"fqdn,omitempty" tf:"fqdn,omitempty"`
 
-	// IPv6 address for record creation. Set the field with valid IP for static allocation. If to be dynamically allocated set cidr field
+	// IP address to associate with the AAAA-record. For static allocation, set the field with a valid IP address. For dynamic allocation, leave this field empty and set 'cidr' and 'network_view' fieldsor 'filter_params' and optional 'network_view' fields.
 	// +kubebuilder:validation:Optional
 	IPv6Addr *string `json:"ipv6Addr,omitempty" tf:"ipv6_addr,omitempty"`
 
-	// Network view name of NIOS server.
+	// Network view to use when allocating an IP address from a network dynamically. For static allocation, leave this field empty.
 	// +kubebuilder:validation:Optional
 	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
 
-	// TTL attribute value for the record.
+	// TTL value for the AAAA-record.
 	// +kubebuilder:validation:Optional
 	TTL *float64 `json:"ttl,omitempty" tf:"ttl,omitempty"`
 }

@@ -73,32 +73,42 @@ spec:
               forProvider:
                 properties:
                   cidr:
-                    description: The network address in cidr format under which record
-                      has to be created.
+                    description: Network to allocate an IP address from, when the
+                      'ipv6_addr' field is empty (dynamic allocation). The address
+                      is in CIDR format. For static allocation, leave this field empty.
                     type: string
                   comment:
-                    description: A description about AAAA record.
+                    description: Description of the AAAA-record.
                     type: string
                   dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: DNS view which the zone does exist within.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of AAAA record to be added/updated,
+                    description: Extensible attributes of the AAAA-record to be added/updated,
                       as a map in JSON format
                     type: string
+                  filterParams:
+                    description: The parent network block's extensible attributes
+                      (dynamic allocation). For static allocation, leave this field
+                      empty.
+                    type: string
                   fqdn:
-                    description: The name of the AAAA record in FQDN format.
+                    description: FQDN for the AAAA-record.
                     type: string
                   ipv6Addr:
-                    description: IPv6 address for record creation. Set the field with
-                      valid IP for static allocation. If to be dynamically allocated
-                      set cidr field
+                    description: IP address to associate with the AAAA-record. For
+                      static allocation, set the field with a valid IP address. For
+                      dynamic allocation, leave this field empty and set 'cidr' and
+                      'network_view' fieldsor 'filter_params' and optional 'network_view'
+                      fields.
                     type: string
                   networkView:
-                    description: Network view name of NIOS server.
+                    description: Network view to use when allocating an IP address
+                      from a network dynamically. For static allocation, leave this
+                      field empty.
                     type: string
                   ttl:
-                    description: TTL attribute value for the record.
+                    description: TTL value for the AAAA-record.
                     type: number
                 type: object
               initProvider:
@@ -115,32 +125,42 @@ spec:
                   autoscaler.
                 properties:
                   cidr:
-                    description: The network address in cidr format under which record
-                      has to be created.
+                    description: Network to allocate an IP address from, when the
+                      'ipv6_addr' field is empty (dynamic allocation). The address
+                      is in CIDR format. For static allocation, leave this field empty.
                     type: string
                   comment:
-                    description: A description about AAAA record.
+                    description: Description of the AAAA-record.
                     type: string
                   dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: DNS view which the zone does exist within.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of AAAA record to be added/updated,
+                    description: Extensible attributes of the AAAA-record to be added/updated,
                       as a map in JSON format
                     type: string
+                  filterParams:
+                    description: The parent network block's extensible attributes
+                      (dynamic allocation). For static allocation, leave this field
+                      empty.
+                    type: string
                   fqdn:
-                    description: The name of the AAAA record in FQDN format.
+                    description: FQDN for the AAAA-record.
                     type: string
                   ipv6Addr:
-                    description: IPv6 address for record creation. Set the field with
-                      valid IP for static allocation. If to be dynamically allocated
-                      set cidr field
+                    description: IP address to associate with the AAAA-record. For
+                      static allocation, set the field with a valid IP address. For
+                      dynamic allocation, leave this field empty and set 'cidr' and
+                      'network_view' fieldsor 'filter_params' and optional 'network_view'
+                      fields.
                     type: string
                   networkView:
-                    description: Network view name of NIOS server.
+                    description: Network view to use when allocating an IP address
+                      from a network dynamically. For static allocation, leave this
+                      field empty.
                     type: string
                   ttl:
-                    description: TTL attribute value for the record.
+                    description: TTL value for the AAAA-record.
                     type: number
                 type: object
               managementPolicies:
@@ -321,34 +341,49 @@ spec:
               atProvider:
                 properties:
                   cidr:
-                    description: The network address in cidr format under which record
-                      has to be created.
+                    description: Network to allocate an IP address from, when the
+                      'ipv6_addr' field is empty (dynamic allocation). The address
+                      is in CIDR format. For static allocation, leave this field empty.
                     type: string
                   comment:
-                    description: A description about AAAA record.
+                    description: Description of the AAAA-record.
                     type: string
                   dnsView:
-                    description: Dns View under which the zone has been created.
+                    description: DNS view which the zone does exist within.
                     type: string
                   extAttrs:
-                    description: The Extensible attributes of AAAA record to be added/updated,
+                    description: Extensible attributes of the AAAA-record to be added/updated,
                       as a map in JSON format
                     type: string
+                  filterParams:
+                    description: The parent network block's extensible attributes
+                      (dynamic allocation). For static allocation, leave this field
+                      empty.
+                    type: string
                   fqdn:
-                    description: The name of the AAAA record in FQDN format.
+                    description: FQDN for the AAAA-record.
                     type: string
                   id:
                     type: string
+                  internalId:
+                    type: string
                   ipv6Addr:
-                    description: IPv6 address for record creation. Set the field with
-                      valid IP for static allocation. If to be dynamically allocated
-                      set cidr field
+                    description: IP address to associate with the AAAA-record. For
+                      static allocation, set the field with a valid IP address. For
+                      dynamic allocation, leave this field empty and set 'cidr' and
+                      'network_view' fieldsor 'filter_params' and optional 'network_view'
+                      fields.
                     type: string
                   networkView:
-                    description: Network view name of NIOS server.
+                    description: Network view to use when allocating an IP address
+                      from a network dynamically. For static allocation, leave this
+                      field empty.
+                    type: string
+                  ref:
+                    description: NIOS object's reference, not to be set by a user.
                     type: string
                   ttl:
-                    description: TTL attribute value for the record.
+                    description: TTL value for the AAAA-record.
                     type: number
                 type: object
               conditions:
