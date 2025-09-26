@@ -302,6 +302,9 @@ jobs:
       - name: Vendor Dependencies
         run: make vendor vendor.check
 
+      - name: Ensure all tools are installed
+        run: make tools
+
       - name: Build Artifacts
         run: make -j2 build.all
         env:
