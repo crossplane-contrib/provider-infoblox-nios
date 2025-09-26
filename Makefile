@@ -56,6 +56,8 @@ USE_HELM3 = true
 HELM3_VERSION = v3.18.4
 UP_CHANNEL = stable
 UPTEST_VERSION = v0.11.1
+CROSSPLANE_VERSION = 1.20.0
+CRDDIFF_VERSION = v0.12.1
 -include build/makelib/k8s_tools.mk
 
 # ====================================================================================
@@ -130,8 +132,6 @@ $(TERRAFORM_PROVIDER_SCHEMA): $(TERRAFORM)
 	@mkdir -p $(TERRAFORM_WORKDIR)
 	@echo '{"terraform":[{"required_providers":[{"provider":{"source":"'"$(TERRAFORM_PROVIDER_SOURCE)"'","version":"'"$(TERRAFORM_PROVIDER_VERSION)"'"}}],"required_version":"'"$(TERRAFORM_VERSION)"'"}]}' > $(TERRAFORM_WORKDIR)/main.tf.json
 	@$(TERRAFORM) -chdir=$(TERRAFORM_WORKDIR) init > $(TERRAFORM_WORKDIR)/terraform-logs.txt 2>&1
-	@$(INFO) post init
-
 	@$(TERRAFORM) -chdir=$(TERRAFORM_WORKDIR) providers schema -json=true > $(TERRAFORM_PROVIDER_SCHEMA) 2>> $(TERRAFORM_WORKDIR)/terraform-logs.txt
 	@$(OK) generating provider schema for $(TERRAFORM_PROVIDER_SOURCE) $(TERRAFORM_PROVIDER_VERSION)
 
@@ -143,7 +143,7 @@ pull-docs:
 #@git -C "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" sparse-checkout set "$(TERRAFORM_DOCS_PATH)"
 
 # The current doc structure is incompatible with the Upjet scraper, which expects 
-# a prelude section. We generate docs
+# a prelude section. This will generate docs from the source code.
 gen-docs: $(TERRAFORM_PLUGIN_DOCS)
 	$(TERRAFORM_PLUGIN_DOCS) generate --provider-dir $(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE) --provider-dir $(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)
 
@@ -180,7 +180,7 @@ submodules:
 run: go.build
 	@$(INFO) Running Crossplane locally out-of-cluster . . .
 	@# To see other arguments that can be provided, run the command with --help instead
-	UPBOUND_CONTEXT="local" $(GO_OUT_DIR)/provider --debug
+	UPBOUND_CONTEXT="local" $(GO_OUT_DIR)/provider --debug --certs-dir=""
 
 # ====================================================================================
 # End to End Testing
@@ -203,7 +203,7 @@ local-deploy: build controlplane.up local.xpkg.deploy.provider.$(PROJECT_NAME) i
 	@$(KUBECTL) -n upbound-system wait --for=condition=Available deployment --all --timeout=5m
 	@$(OK) running locally built provider
 
-tools: $(HELM) $(UPTEST) $(KUBECTL) $(KUTTL) $(TERRAFORM) $(KIND)
+tools: $(HELM) $(UPTEST) $(KUBECTL) $(KUTTL) $(TERRAFORM) $(KIND) $(CROSSPLANE_CLI)
 
 infoblox:
 	@$(HELM) upgrade --install nios-test --create-namespace -n infoblox-system \
