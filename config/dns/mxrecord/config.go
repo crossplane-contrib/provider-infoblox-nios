@@ -7,6 +7,5 @@ func Configure(p *config.Provider) {
 	p.AddResourceConfigurator("infoblox_mx_record", func(r *config.Resource) {
 		r.ShortGroup = "dns"
 		r.Kind = "MX"
-		r.ExternalName = config.NameAsIdentifier
 	})
 }

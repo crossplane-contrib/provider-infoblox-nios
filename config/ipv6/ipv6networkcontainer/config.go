@@ -7,6 +7,5 @@ func Configure(p *config.Provider) {
 	p.AddResourceConfigurator("infoblox_ipv6_network_container", func(r *config.Resource) {
 
 		r.ShortGroup = "ipv6"
-		r.ExternalName = config.NameAsIdentifier
 	})
 }

@@ -1427,6 +1427,11 @@ func (in *SRVInitParameters) DeepCopyInto(out *SRVInitParameters) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.Name != nil {
+		in, out := &in.Name, &out.Name
+		*out = new(string)
+		**out = **in
+	}
 	if in.Port != nil {
 		in, out := &in.Port, &out.Port
 		*out = new(float64)
@@ -1524,6 +1529,11 @@ func (in *SRVObservation) DeepCopyInto(out *SRVObservation) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.Name != nil {
+		in, out := &in.Name, &out.Name
+		*out = new(string)
+		**out = **in
+	}
 	if in.Port != nil {
 		in, out := &in.Port, &out.Port
 		*out = new(float64)
@@ -1581,6 +1591,11 @@ func (in *SRVParameters) DeepCopyInto(out *SRVParameters) {
 	}
 	if in.ExtAttrs != nil {
 		in, out := &in.ExtAttrs, &out.ExtAttrs
+		*out = new(string)
+		**out = **in
+	}
+	if in.Name != nil {
+		in, out := &in.Name, &out.Name
 		*out = new(string)
 		**out = **in
 	}

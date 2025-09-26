@@ -20,6 +20,9 @@ type ViewInitParameters struct {
 
 	// The Extensible attributes of the network container to be added/updated, as a map in JSON format
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// Specifies the desired name of the network view as shown in the NIOS appliance. The name has the same requirements as the corresponding parameter in WAPI.
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 }
 
 type ViewObservation struct {
@@ -34,6 +37,9 @@ type ViewObservation struct {
 
 	InternalID *string `json:"internalId,omitempty" tf:"internal_id,omitempty"`
 
+	// Specifies the desired name of the network view as shown in the NIOS appliance. The name has the same requirements as the corresponding parameter in WAPI.
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
 	// NIOS object's reference, not to be set by a user.
 	Ref *string `json:"ref,omitempty" tf:"ref,omitempty"`
 }
@@ -47,6 +53,10 @@ type ViewParameters struct {
 	// The Extensible attributes of the network container to be added/updated, as a map in JSON format
 	// +kubebuilder:validation:Optional
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// Specifies the desired name of the network view as shown in the NIOS appliance. The name has the same requirements as the corresponding parameter in WAPI.
+	// +kubebuilder:validation:Optional
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 }
 
 // ViewSpec defines the desired state of View
@@ -85,8 +95,9 @@ type ViewStatus struct {
 type View struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              ViewSpec   `json:"spec"`
-	Status            ViewStatus `json:"status,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.name) || (has(self.initProvider) && has(self.initProvider.name))",message="spec.forProvider.name is a required parameter"
+	Spec   ViewSpec   `json:"spec"`
+	Status ViewStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true

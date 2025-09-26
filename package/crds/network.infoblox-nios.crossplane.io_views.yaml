@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.16.5
   name: views.network.infoblox-nios.crossplane.io
 spec:
   group: network.infoblox-nios.crossplane.io
@@ -79,6 +79,11 @@ spec:
                     description: The Extensible attributes of the network container
                       to be added/updated, as a map in JSON format
                     type: string
+                  name:
+                    description: Specifies the desired name of the network view as
+                      shown in the NIOS appliance. The name has the same requirements
+                      as the corresponding parameter in WAPI.
+                    type: string
                 type: object
               initProvider:
                 description: |-
@@ -99,6 +104,11 @@ spec:
                   extAttrs:
                     description: The Extensible attributes of the network container
                       to be added/updated, as a map in JSON format
+                    type: string
+                  name:
+                    description: Specifies the desired name of the network view as
+                      shown in the NIOS appliance. The name has the same requirements
+                      as the corresponding parameter in WAPI.
                     type: string
                 type: object
               managementPolicies:
@@ -268,6 +278,11 @@ spec:
             required:
             - forProvider
             type: object
+            x-kubernetes-validations:
+            - message: spec.forProvider.name is a required parameter
+              rule: '!(''*'' in self.managementPolicies || ''Create'' in self.managementPolicies
+                || ''Update'' in self.managementPolicies) || has(self.forProvider.name)
+                || (has(self.initProvider) && has(self.initProvider.name))'
           status:
             description: ViewStatus defines the observed state of View.
             properties:
@@ -283,6 +298,11 @@ spec:
                   id:
                     type: string
                   internalId:
+                    type: string
+                  name:
+                    description: Specifies the desired name of the network view as
+                      shown in the NIOS appliance. The name has the same requirements
+                      as the corresponding parameter in WAPI.
                     type: string
                   ref:
                     description: NIOS object's reference, not to be set by a user.

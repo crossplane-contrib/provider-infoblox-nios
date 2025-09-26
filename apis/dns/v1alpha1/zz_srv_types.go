@@ -24,6 +24,9 @@ type SRVInitParameters struct {
 	// Extensible attributes of the SRV-record to be added/updated, as a map in JSON format.
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
 
+	// Combination of service's name, protocol's name and zone's name
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
+
 	// Configures port number (0..65535) for this SRV-record.
 	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
 
@@ -54,6 +57,9 @@ type SRVObservation struct {
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
 	InternalID *string `json:"internalId,omitempty" tf:"internal_id,omitempty"`
+
+	// Combination of service's name, protocol's name and zone's name
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
 	// Configures port number (0..65535) for this SRV-record.
 	Port *float64 `json:"port,omitempty" tf:"port,omitempty"`
@@ -87,6 +93,10 @@ type SRVParameters struct {
 	// Extensible attributes of the SRV-record to be added/updated, as a map in JSON format.
 	// +kubebuilder:validation:Optional
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// Combination of service's name, protocol's name and zone's name
+	// +kubebuilder:validation:Optional
+	Name *string `json:"name,omitempty" tf:"name,omitempty"`
 
 	// Configures port number (0..65535) for this SRV-record.
 	// +kubebuilder:validation:Optional
@@ -145,6 +155,7 @@ type SRVStatus struct {
 type SRV struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
+	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.name) || (has(self.initProvider) && has(self.initProvider.name))",message="spec.forProvider.name is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.port) || (has(self.initProvider) && has(self.initProvider.port))",message="spec.forProvider.port is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.priority) || (has(self.initProvider) && has(self.initProvider.priority))",message="spec.forProvider.priority is a required parameter"
 	// +kubebuilder:validation:XValidation:rule="!('*' in self.managementPolicies || 'Create' in self.managementPolicies || 'Update' in self.managementPolicies) || has(self.forProvider.target) || (has(self.initProvider) && has(self.initProvider.target))",message="spec.forProvider.target is a required parameter"
