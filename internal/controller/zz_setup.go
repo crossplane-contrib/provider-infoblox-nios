@@ -16,6 +16,7 @@ import (
 	record "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/record"
 	srv "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/srv"
 	txt "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/txt"
+	allocation "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ip/allocation"
 	association "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ip/association"
 	network "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ipv4/network"
 	networkcontainer "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ipv4/networkcontainer"
@@ -36,6 +37,7 @@ func Setup(mgr ctrl.Manager, o controller.Options) error {
 		record.Setup,
 		srv.Setup,
 		txt.Setup,
+		allocation.Setup,
 		association.Setup,
 		network.Setup,
 		networkcontainer.Setup,
