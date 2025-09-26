@@ -55,7 +55,7 @@ UP_VERSION = v0.40.2
 USE_HELM3 = true
 HELM3_VERSION = v3.18.4
 UP_CHANNEL = stable
-UPTEST_VERSION = v0.11.1
+UPTEST_VERSION = v2.0.0
 CROSSPLANE_VERSION = 1.20.0
 CRDDIFF_VERSION = v0.12.1
 -include build/makelib/k8s_tools.mk
@@ -191,6 +191,26 @@ ifeq ($(USE_DEVCON),true)
 else
 -include build/makelib/controlplane.mk
 endif
+
+
+# TODO: please move this to the common build submodule
+# once the use cases mature
+crddiff:
+	@$(INFO) Checking breaking CRD schema changes
+	@for crd in $${MODIFIED_CRD_LIST}; do \
+		if ! git cat-file -e "$${GITHUB_BASE_REF}:$${crd}" 2>/dev/null; then \
+			echo "CRD $${crd} does not exist in the $${GITHUB_BASE_REF} branch. Skipping..." ; \
+			continue ; \
+		fi ; \
+		echo "Checking $${crd} for breaking API changes..." ; \
+		changes_detected=$$(go run github.com/upbound/uptest/cmd/crddiff@$(CRDDIFF_VERSION) revision --enable-upjet-extensions <(git cat-file -p "$${GITHUB_BASE_REF}:$${crd}") "$${crd}" 2>&1) ; \
+		if [[ $$? != 0 ]] ; then \
+			printf "\033[31m"; echo "Breaking change detected!"; printf "\033[0m" ; \
+			echo "$${changes_detected}" ; \
+			echo ; \
+		fi ; \
+	done
+	@$(OK) Checking breaking CRD schema changes
 
 uptest: $(UPTEST) $(KUBECTL) $(KUTTL)
 	@$(INFO) running automated tests
