@@ -7,8 +7,8 @@ package v1alpha1
 
 import resource "github.com/crossplane/crossplane-runtime/pkg/resource"
 
-// GetItems of this AAAAList.
-func (l *AAAAList) GetItems() []resource.Managed {
+// GetItems of this AAAARecordList.
+func (l *AAAARecordList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
 	for i := range l.Items {
 		items[i] = &l.Items[i]
@@ -16,8 +16,8 @@ func (l *AAAAList) GetItems() []resource.Managed {
 	return items
 }
 
-// GetItems of this CNAMEList.
-func (l *CNAMEList) GetItems() []resource.Managed {
+// GetItems of this ARecordList.
+func (l *ARecordList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
 	for i := range l.Items {
 		items[i] = &l.Items[i]
@@ -25,8 +25,8 @@ func (l *CNAMEList) GetItems() []resource.Managed {
 	return items
 }
 
-// GetItems of this MXList.
-func (l *MXList) GetItems() []resource.Managed {
+// GetItems of this CNAMERecordList.
+func (l *CNAMERecordList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
 	for i := range l.Items {
 		items[i] = &l.Items[i]
@@ -34,8 +34,8 @@ func (l *MXList) GetItems() []resource.Managed {
 	return items
 }
 
-// GetItems of this PTRList.
-func (l *PTRList) GetItems() []resource.Managed {
+// GetItems of this MXRecordList.
+func (l *MXRecordList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
 	for i := range l.Items {
 		items[i] = &l.Items[i]
@@ -43,8 +43,8 @@ func (l *PTRList) GetItems() []resource.Managed {
 	return items
 }
 
-// GetItems of this RecordList.
-func (l *RecordList) GetItems() []resource.Managed {
+// GetItems of this PTRRecordList.
+func (l *PTRRecordList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
 	for i := range l.Items {
 		items[i] = &l.Items[i]
@@ -52,8 +52,8 @@ func (l *RecordList) GetItems() []resource.Managed {
 	return items
 }
 
-// GetItems of this SRVList.
-func (l *SRVList) GetItems() []resource.Managed {
+// GetItems of this SRVRecordList.
+func (l *SRVRecordList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
 	for i := range l.Items {
 		items[i] = &l.Items[i]
@@ -61,8 +61,8 @@ func (l *SRVList) GetItems() []resource.Managed {
 	return items
 }
 
-// GetItems of this TXTList.
-func (l *TXTList) GetItems() []resource.Managed {
+// GetItems of this TXTRecordList.
+func (l *TXTRecordList) GetItems() []resource.Managed {
 	items := make([]resource.Managed, len(l.Items))
 	for i := range l.Items {
 		items[i] = &l.Items[i]

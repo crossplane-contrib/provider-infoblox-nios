@@ -9,13 +9,13 @@ import (
 
 	"github.com/crossplane/upjet/pkg/controller"
 
-	aaaa "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/aaaa"
-	cname "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/cname"
-	mx "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/mx"
-	ptr "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/ptr"
-	record "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/record"
-	srv "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/srv"
-	txt "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/txt"
+	aaaarecord "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/aaaarecord"
+	arecord "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/arecord"
+	cnamerecord "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/cnamerecord"
+	mxrecord "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/mxrecord"
+	ptrrecord "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/ptrrecord"
+	srvrecord "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/srvrecord"
+	txtrecord "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/dns/txtrecord"
 	allocation "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ip/allocation"
 	association "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ip/association"
 	network "github.com/crossplane-contrib/provider-infoblox-nios/internal/controller/ipv4/network"
@@ -30,13 +30,13 @@ import (
 // the supplied manager.
 func Setup(mgr ctrl.Manager, o controller.Options) error {
 	for _, setup := range []func(ctrl.Manager, controller.Options) error{
-		aaaa.Setup,
-		cname.Setup,
-		mx.Setup,
-		ptr.Setup,
-		record.Setup,
-		srv.Setup,
-		txt.Setup,
+		aaaarecord.Setup,
+		arecord.Setup,
+		cnamerecord.Setup,
+		mxrecord.Setup,
+		ptrrecord.Setup,
+		srvrecord.Setup,
+		txtrecord.Setup,
 		allocation.Setup,
 		association.Setup,
 		network.Setup,

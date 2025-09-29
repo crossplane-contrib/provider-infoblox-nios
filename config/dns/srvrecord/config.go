@@ -6,6 +6,6 @@ import "github.com/crossplane/upjet/pkg/config"
 func Configure(p *config.Provider) {
 	p.AddResourceConfigurator("infoblox_srv_record", func(r *config.Resource) {
 		r.ShortGroup = "dns"
-		r.Kind = "SRV"
+		r.Kind = "SRVRecord"
 	})
 }

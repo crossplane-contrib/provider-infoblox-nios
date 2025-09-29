@@ -7,22 +7,22 @@ Copyright 2022 Upbound Inc.
 package v1alpha1
 
 // Hub marks this type as a conversion hub.
-func (tr *AAAA) Hub() {}
+func (tr *AAAARecord) Hub() {}
 
 // Hub marks this type as a conversion hub.
-func (tr *CNAME) Hub() {}
+func (tr *ARecord) Hub() {}
 
 // Hub marks this type as a conversion hub.
-func (tr *MX) Hub() {}
+func (tr *CNAMERecord) Hub() {}
 
 // Hub marks this type as a conversion hub.
-func (tr *PTR) Hub() {}
+func (tr *MXRecord) Hub() {}
 
 // Hub marks this type as a conversion hub.
-func (tr *Record) Hub() {}
+func (tr *PTRRecord) Hub() {}
 
 // Hub marks this type as a conversion hub.
-func (tr *SRV) Hub() {}
+func (tr *SRVRecord) Hub() {}
 
 // Hub marks this type as a conversion hub.
-func (tr *TXT) Hub() {}
+func (tr *TXTRecord) Hub() {}

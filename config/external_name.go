@@ -21,6 +21,7 @@ var ExternalNameConfigs = map[string]config.ExternalName{
 	"infoblox_ipv6_network_container": config.IdentifierFromProvider,
 	"infoblox_a_record":               config.IdentifierFromProvider,
 	"infoblox_aaaa_record":            config.IdentifierFromProvider,
+	"infoblox_host_record":            config.IdentifierFromProvider,
 	"infoblox_cname_record":           config.IdentifierFromProvider,
 	"infoblox_srv_record":             config.IdentifierFromProvider,
 	"infoblox_txt_record":             config.IdentifierFromProvider,
