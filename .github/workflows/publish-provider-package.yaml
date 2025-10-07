@@ -19,7 +19,7 @@ jobs:
       repository: provider-infoblox-nios
       version: ${{ github.event.inputs.version }}
       go-version: ${{ github.event.inputs.go-version }}
-      cleanup-disk: true
+      cleanup-disk: false
     secrets:
       GHCR_PAT: ${{ secrets.GITHUB_TOKEN }}
       XPKG_MIRROR_TOKEN: ${{ secrets.XPKG_TOKEN }}
