@@ -6,7 +6,6 @@ import "github.com/crossplane/upjet/pkg/config"
 func Configure(p *config.Provider) {
 	p.AddResourceConfigurator("infoblox_ptr_record", func(r *config.Resource) {
 		r.ShortGroup = "dns"
-		r.Kind = "PTR"
-		r.ExternalName = config.NameAsIdentifier
+		r.Kind = "PTRRecord"
 	})
 }

@@ -7,14 +7,13 @@ PROJECT_REPO ?= github.com/crossplane-contrib/$(PROJECT_NAME)
 export TERRAFORM_VERSION ?= 1.5.0
 
 export TERRAFORM_PROVIDER_SOURCE ?= infobloxopen/infoblox
-export TERRAFORM_PROVIDER_VERSION ?= 2.4.0
+export TERRAFORM_PROVIDER_VERSION ?= 2.10.0
 export TERRAFORM_PROVIDER_REPO := https://github.com/infobloxopen/terraform-provider-infoblox
-export TERRAFORM_PROVIDER_REPO_HACK := https://github.com/fire-ant/terraform-provider-infoblox
+#export TERRAFORM_PROVIDER_REPO_HACK := https://github.com/fire-ant/terraform-provider-infoblox
 export TERRAFORM_PROVIDER_DOWNLOAD_NAME ?= terraform-provider-infoblox
 export TERRAFORM_PROVIDER_DOWNLOAD_URL_PREFIX ?= https://github.com/infobloxopen/$(TERRAFORM_PROVIDER_DOWNLOAD_NAME)/releases/download/v$(TERRAFORM_PROVIDER_VERSION)
-export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-infoblox_v2.4.0
+export TERRAFORM_NATIVE_PROVIDER_BINARY ?= terraform-provider-infoblox_v$(TERRAFORM_PROVIDER_VERSION)
 export TERRAFORM_DOCS_PATH ?= docs/resources
-
 
 PLATFORMS ?= linux_amd64 linux_arm64
 
@@ -42,7 +41,7 @@ NPROCS ?= 1
 GO_TEST_PARALLEL := $(shell echo $$(( $(NPROCS) / 2 )))
 
 GO_REQUIRED_VERSION ?= 1.22
-GOLANGCILINT_VERSION ?= 1.50.0
+GOLANGCILINT_VERSION ?= 1.64.8
 GO_STATIC_PACKAGES = $(GO_PROJECT)/cmd/provider $(GO_PROJECT)/cmd/generator
 GO_LDFLAGS += -X $(GO_PROJECT)/internal/version.Version=$(VERSION)
 GO_SUBDIRS += cmd internal apis
@@ -51,12 +50,14 @@ GO_SUBDIRS += cmd internal apis
 # ====================================================================================
 # Setup Kubernetes tools
 
-KIND_VERSION = v0.15.0
-UP_VERSION = v0.29.0
+KIND_VERSION = v0.29.0
+UP_VERSION = v0.40.2
 USE_HELM3 = true
-HELM3_VERSION = v3.9.1
+HELM3_VERSION = v3.18.4
 UP_CHANNEL = stable
-UPTEST_VERSION = v0.11.1
+UPTEST_VERSION = v2.0.0
+CROSSPLANE_VERSION = 1.20.0
+CRDDIFF_VERSION = v0.12.1
 -include build/makelib/k8s_tools.mk
 
 # ====================================================================================
@@ -113,6 +114,19 @@ $(TERRAFORM):
 	@rm -fr $(TOOLS_HOST_DIR)/tmp-terraform
 	@$(OK) installing terraform $(HOSTOS)-$(HOSTARCH)
 
+export TERRAFORM_PLUGIN_DOCS_REPO ?= https://github.com/hashicorp/terraform-plugin-docs
+export TERRAFORM_PLUGIN_DOCS_VERSION ?= 0.23.0
+export TERRAFORM_PLUGIN_DOCS ?= $(TOOLS_HOST_DIR)/terraform-plugin-docs-$(TERRAFORM_PLUGIN_DOCS_VERSION)
+
+$(TERRAFORM_PLUGIN_DOCS):
+	@$(INFO) installing $(TERRAFORM_PLUGIN_DOCS) $(HOSTOS)-$(HOSTARCH)
+	@mkdir -p $(TOOLS_HOST_DIR)/tmp-terraform-plugin-docs
+	@curl -fsSL $(TERRAFORM_PLUGIN_DOCS_REPO)/releases/download/v$(TERRAFORM_PLUGIN_DOCS_VERSION)/tfplugindocs_$(TERRAFORM_PLUGIN_DOCS_VERSION)_$(SAFEHOST_PLATFORM).zip -o $(TOOLS_HOST_DIR)/tmp-terraform-plugin-docs/tfplugindocs.zip
+	@unzip $(TOOLS_HOST_DIR)/tmp-terraform-plugin-docs/tfplugindocs.zip -d $(TOOLS_HOST_DIR)/tmp-terraform-plugin-docs
+	@mv $(TOOLS_HOST_DIR)/tmp-terraform-plugin-docs/tfplugindocs $(TERRAFORM_PLUGIN_DOCS)
+	@rm -fr $(TOOLS_HOST_DIR)/tmp-terraform-plugin-docs
+	@$(OK) installing $(TERRAFORM_PLUGIN_DOCS) $(HOSTOS)-$(HOSTARCH)
+
 $(TERRAFORM_PROVIDER_SCHEMA): $(TERRAFORM)
 	@$(INFO) generating provider schema for $(TERRAFORM_PROVIDER_SOURCE) $(TERRAFORM_PROVIDER_VERSION)
 	@mkdir -p $(TERRAFORM_WORKDIR)
@@ -124,11 +138,16 @@ $(TERRAFORM_PROVIDER_SCHEMA): $(TERRAFORM)
 pull-docs:
 	@if [ ! -d "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" ]; then \
   		mkdir -p "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" && \
-		git clone -c advice.detachedHead=false --depth 1 --filter=blob:none --branch "v$(TERRAFORM_PROVIDER_VERSION)" --sparse "$(TERRAFORM_PROVIDER_REPO_HACK)" "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)"; \
+		git clone -c advice.detachedHead=false --branch "v$(TERRAFORM_PROVIDER_VERSION)" "$(TERRAFORM_PROVIDER_REPO)" "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)"; \
 	fi
-	@git -C "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" sparse-checkout set "$(TERRAFORM_DOCS_PATH)"
+#@git -C "$(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)" sparse-checkout set "$(TERRAFORM_DOCS_PATH)"
 
-generate.init: $(TERRAFORM_PROVIDER_SCHEMA) pull-docs
+# The current doc structure is incompatible with the Upjet scraper, which expects 
+# a prelude section. This will generate docs from the source code.
+gen-docs: $(TERRAFORM_PLUGIN_DOCS)
+	$(TERRAFORM_PLUGIN_DOCS) generate --provider-dir $(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE) --provider-dir $(WORK_DIR)/$(TERRAFORM_PROVIDER_SOURCE)
+
+generate.init: $(TERRAFORM_PROVIDER_SCHEMA) pull-docs gen-docs
 
 .PHONY: $(TERRAFORM_PROVIDER_SCHEMA) pull-docs
 # ====================================================================================
@@ -161,7 +180,7 @@ submodules:
 run: go.build
 	@$(INFO) Running Crossplane locally out-of-cluster . . .
 	@# To see other arguments that can be provided, run the command with --help instead
-	UPBOUND_CONTEXT="local" $(GO_OUT_DIR)/provider --debug
+	UPBOUND_CONTEXT="local" $(GO_OUT_DIR)/provider --debug --certs-dir=""
 
 # ====================================================================================
 # End to End Testing
@@ -172,6 +191,26 @@ ifeq ($(USE_DEVCON),true)
 else
 -include build/makelib/controlplane.mk
 endif
+
+
+# TODO: please move this to the common build submodule
+# once the use cases mature
+crddiff:
+	@$(INFO) Checking breaking CRD schema changes
+	@for crd in $${MODIFIED_CRD_LIST}; do \
+		if ! git cat-file -e "$${GITHUB_BASE_REF}:$${crd}" 2>/dev/null; then \
+			echo "CRD $${crd} does not exist in the $${GITHUB_BASE_REF} branch. Skipping..." ; \
+			continue ; \
+		fi ; \
+		echo "Checking $${crd} for breaking API changes..." ; \
+		changes_detected=$$(go run github.com/upbound/uptest/cmd/crddiff@$(CRDDIFF_VERSION) revision --enable-upjet-extensions <(git cat-file -p "$${GITHUB_BASE_REF}:$${crd}") "$${crd}" 2>&1) ; \
+		if [[ $$? != 0 ]] ; then \
+			printf "\033[31m"; echo "Breaking change detected!"; printf "\033[0m" ; \
+			echo "$${changes_detected}" ; \
+			echo ; \
+		fi ; \
+	done
+	@$(OK) Checking breaking CRD schema changes
 
 uptest: $(UPTEST) $(KUBECTL) $(KUTTL)
 	@$(INFO) running automated tests
@@ -184,7 +223,7 @@ local-deploy: build controlplane.up local.xpkg.deploy.provider.$(PROJECT_NAME) i
 	@$(KUBECTL) -n upbound-system wait --for=condition=Available deployment --all --timeout=5m
 	@$(OK) running locally built provider
 
-tools: $(HELM) $(UPTEST) $(KUBECTL) $(KUTTL) $(TERRAFORM) $(KIND)
+tools: $(HELM) $(UPTEST) $(KUBECTL) $(KUTTL) $(TERRAFORM) $(KIND) $(CROSSPLANE_CLI)
 
 infoblox:
 	@$(HELM) upgrade --install nios-test --create-namespace -n infoblox-system \

@@ -15,10 +15,13 @@ import (
 
 type AllocationInitParameters struct {
 
-	// Value which comes from 'ipv4_addr' (if specified) or from auto-allocation function (using 'ipv4_cidr').
+	// A set of IP allocation aliases
+	Aliases []*string `json:"aliases,omitempty" tf:"aliases,omitempty"`
+
+	// Value which comes from 'ipv4_addr' (if specified) or from auto-allocation function (using 'ipv4_cidr' or 'filter_params').
 	AllocatedIPv4Addr *string `json:"allocatedIpv4Addr,omitempty" tf:"allocated_ipv4_addr,omitempty"`
 
-	// Value which comes from 'ipv6_addr' (if specified) or from auto-allocation function (using 'ipv6_cidr').
+	// Value which comes from 'ipv6_addr' (if specified) or from auto-allocation function (using 'ipv6_cidr' or 'filter_params').
 	AllocatedIPv6Addr *string `json:"allocatedIpv6Addr,omitempty" tf:"allocated_ipv6_addr,omitempty"`
 
 	// A description of IP address allocation.
@@ -27,14 +30,23 @@ type AllocationInitParameters struct {
 	// DNS view under which the zone has been created.
 	DNSView *string `json:"dnsView,omitempty" tf:"dns_view,omitempty"`
 
+	// Disables the Host record if set to 'true'.
+	Disable *bool `json:"disable,omitempty" tf:"disable,omitempty"`
+
 	// flag that defines if the host record is to be used for DNS purposes.
 	EnableDNS *bool `json:"enableDns,omitempty" tf:"enable_dns,omitempty"`
 
 	// The extensible attributes for IP address allocation, as a map in JSON format
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
 
+	// The parent network block's extensible attributes. This field is used for dynamic allocation along with 'ip_address_type' field.
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
+
 	// The host name for Host Record in FQDN format.
 	Fqdn *string `json:"fqdn,omitempty" tf:"fqdn,omitempty"`
+
+	// The type of IP address to allocate. This filed is used only when 'filter_params' field is used. Valid values are: IPV4, IPV6, Both. Default value is IPV4
+	IPAddressType *string `json:"ipAddressType,omitempty" tf:"ip_address_type,omitempty"`
 
 	// IPv4 address of cloud instance.Set a valid IP address for static allocation and leave empty if dynamically allocated.
 	IPv4Addr *string `json:"ipv4Addr,omitempty" tf:"ipv4_addr,omitempty"`
@@ -57,10 +69,13 @@ type AllocationInitParameters struct {
 
 type AllocationObservation struct {
 
-	// Value which comes from 'ipv4_addr' (if specified) or from auto-allocation function (using 'ipv4_cidr').
+	// A set of IP allocation aliases
+	Aliases []*string `json:"aliases,omitempty" tf:"aliases,omitempty"`
+
+	// Value which comes from 'ipv4_addr' (if specified) or from auto-allocation function (using 'ipv4_cidr' or 'filter_params').
 	AllocatedIPv4Addr *string `json:"allocatedIpv4Addr,omitempty" tf:"allocated_ipv4_addr,omitempty"`
 
-	// Value which comes from 'ipv6_addr' (if specified) or from auto-allocation function (using 'ipv6_cidr').
+	// Value which comes from 'ipv6_addr' (if specified) or from auto-allocation function (using 'ipv6_cidr' or 'filter_params').
 	AllocatedIPv6Addr *string `json:"allocatedIpv6Addr,omitempty" tf:"allocated_ipv6_addr,omitempty"`
 
 	// A description of IP address allocation.
@@ -69,16 +84,25 @@ type AllocationObservation struct {
 	// DNS view under which the zone has been created.
 	DNSView *string `json:"dnsView,omitempty" tf:"dns_view,omitempty"`
 
+	// Disables the Host record if set to 'true'.
+	Disable *bool `json:"disable,omitempty" tf:"disable,omitempty"`
+
 	// flag that defines if the host record is to be used for DNS purposes.
 	EnableDNS *bool `json:"enableDns,omitempty" tf:"enable_dns,omitempty"`
 
 	// The extensible attributes for IP address allocation, as a map in JSON format
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
 
+	// The parent network block's extensible attributes. This field is used for dynamic allocation along with 'ip_address_type' field.
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
+
 	// The host name for Host Record in FQDN format.
 	Fqdn *string `json:"fqdn,omitempty" tf:"fqdn,omitempty"`
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
+
+	// The type of IP address to allocate. This filed is used only when 'filter_params' field is used. Valid values are: IPV4, IPV6, Both. Default value is IPV4
+	IPAddressType *string `json:"ipAddressType,omitempty" tf:"ip_address_type,omitempty"`
 
 	// IPv4 address of cloud instance.Set a valid IP address for static allocation and leave empty if dynamically allocated.
 	IPv4Addr *string `json:"ipv4Addr,omitempty" tf:"ipv4_addr,omitempty"`
@@ -106,11 +130,15 @@ type AllocationObservation struct {
 
 type AllocationParameters struct {
 
-	// Value which comes from 'ipv4_addr' (if specified) or from auto-allocation function (using 'ipv4_cidr').
+	// A set of IP allocation aliases
+	// +kubebuilder:validation:Optional
+	Aliases []*string `json:"aliases,omitempty" tf:"aliases,omitempty"`
+
+	// Value which comes from 'ipv4_addr' (if specified) or from auto-allocation function (using 'ipv4_cidr' or 'filter_params').
 	// +kubebuilder:validation:Optional
 	AllocatedIPv4Addr *string `json:"allocatedIpv4Addr,omitempty" tf:"allocated_ipv4_addr,omitempty"`
 
-	// Value which comes from 'ipv6_addr' (if specified) or from auto-allocation function (using 'ipv6_cidr').
+	// Value which comes from 'ipv6_addr' (if specified) or from auto-allocation function (using 'ipv6_cidr' or 'filter_params').
 	// +kubebuilder:validation:Optional
 	AllocatedIPv6Addr *string `json:"allocatedIpv6Addr,omitempty" tf:"allocated_ipv6_addr,omitempty"`
 
@@ -122,6 +150,10 @@ type AllocationParameters struct {
 	// +kubebuilder:validation:Optional
 	DNSView *string `json:"dnsView,omitempty" tf:"dns_view,omitempty"`
 
+	// Disables the Host record if set to 'true'.
+	// +kubebuilder:validation:Optional
+	Disable *bool `json:"disable,omitempty" tf:"disable,omitempty"`
+
 	// flag that defines if the host record is to be used for DNS purposes.
 	// +kubebuilder:validation:Optional
 	EnableDNS *bool `json:"enableDns,omitempty" tf:"enable_dns,omitempty"`
@@ -130,9 +162,17 @@ type AllocationParameters struct {
 	// +kubebuilder:validation:Optional
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
 
+	// The parent network block's extensible attributes. This field is used for dynamic allocation along with 'ip_address_type' field.
+	// +kubebuilder:validation:Optional
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
+
 	// The host name for Host Record in FQDN format.
 	// +kubebuilder:validation:Optional
 	Fqdn *string `json:"fqdn,omitempty" tf:"fqdn,omitempty"`
+
+	// The type of IP address to allocate. This filed is used only when 'filter_params' field is used. Valid values are: IPV4, IPV6, Both. Default value is IPV4
+	// +kubebuilder:validation:Optional
+	IPAddressType *string `json:"ipAddressType,omitempty" tf:"ip_address_type,omitempty"`
 
 	// IPv4 address of cloud instance.Set a valid IP address for static allocation and leave empty if dynamically allocated.
 	// +kubebuilder:validation:Optional

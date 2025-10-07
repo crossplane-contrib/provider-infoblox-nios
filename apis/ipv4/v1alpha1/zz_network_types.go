@@ -24,14 +24,20 @@ type NetworkInitParameters struct {
 	// A string describing the network
 	Comment *string `json:"comment,omitempty" tf:"comment,omitempty"`
 
-	// The Extensible attributes of the Network, as a map in JSON format
+	// The Extensible attributes of the Network
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// The parent network/network-container block's extensible attributes.
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
 
 	// Gateway's IP address of the network. By default, the first IP address is set as gateway address; if the value is 'none' then the network has no gateway.
 	Gateway *string `json:"gateway,omitempty" tf:"gateway,omitempty"`
 
 	// Network view name available in NIOS Server.
 	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
+
+	// The parent object from which the network will be allocated. Valid values are 'networkcontainer' and 'network'. Default value is 'networkcontainer'.
+	Object *string `json:"object,omitempty" tf:"object,omitempty"`
 
 	// The parent network container block in cidr format to allocate from.
 	ParentCidr *string `json:"parentCidr,omitempty" tf:"parent_cidr,omitempty"`
@@ -54,19 +60,30 @@ type NetworkObservation struct {
 	// A string describing the network
 	Comment *string `json:"comment,omitempty" tf:"comment,omitempty"`
 
-	// The Extensible attributes of the Network, as a map in JSON format
+	// The Extensible attributes of the Network
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// The parent network/network-container block's extensible attributes.
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
 
 	// Gateway's IP address of the network. By default, the first IP address is set as gateway address; if the value is 'none' then the network has no gateway.
 	Gateway *string `json:"gateway,omitempty" tf:"gateway,omitempty"`
 
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
 
+	InternalID *string `json:"internalId,omitempty" tf:"internal_id,omitempty"`
+
 	// Network view name available in NIOS Server.
 	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
 
+	// The parent object from which the network will be allocated. Valid values are 'networkcontainer' and 'network'. Default value is 'networkcontainer'.
+	Object *string `json:"object,omitempty" tf:"object,omitempty"`
+
 	// The parent network container block in cidr format to allocate from.
 	ParentCidr *string `json:"parentCidr,omitempty" tf:"parent_cidr,omitempty"`
+
+	// NIOS object's reference, not to be set by a user.
+	Ref *string `json:"ref,omitempty" tf:"ref,omitempty"`
 
 	// The number of IP's you want to reserve in IPv4 Network.
 	ReserveIP *float64 `json:"reserveIp,omitempty" tf:"reserve_ip,omitempty"`
@@ -89,9 +106,13 @@ type NetworkParameters struct {
 	// +kubebuilder:validation:Optional
 	Comment *string `json:"comment,omitempty" tf:"comment,omitempty"`
 
-	// The Extensible attributes of the Network, as a map in JSON format
+	// The Extensible attributes of the Network
 	// +kubebuilder:validation:Optional
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// The parent network/network-container block's extensible attributes.
+	// +kubebuilder:validation:Optional
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
 
 	// Gateway's IP address of the network. By default, the first IP address is set as gateway address; if the value is 'none' then the network has no gateway.
 	// +kubebuilder:validation:Optional
@@ -100,6 +121,10 @@ type NetworkParameters struct {
 	// Network view name available in NIOS Server.
 	// +kubebuilder:validation:Optional
 	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
+
+	// The parent object from which the network will be allocated. Valid values are 'networkcontainer' and 'network'. Default value is 'networkcontainer'.
+	// +kubebuilder:validation:Optional
+	Object *string `json:"object,omitempty" tf:"object,omitempty"`
 
 	// The parent network container block in cidr format to allocate from.
 	// +kubebuilder:validation:Optional

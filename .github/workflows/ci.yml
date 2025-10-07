@@ -10,9 +10,9 @@ on:
 
 env:
   # Common versions
-  GO_VERSION: '1.22'
-  GOLANGCI_VERSION: 'v1.55.2'
-  DOCKER_BUILDX_VERSION: 'v0.8.2'
+  GO_VERSION: '1.24'
+  GOLANGCI_VERSION: 'v1.64.8'
+  DOCKER_BUILDX_VERSION: 'v0.28.0'
   # Common users. We can't run a step 'if secrets.XXX != ""' but we can run a
   # step 'if env.XXX != ""', so we copy these to succinctly test whether
   # credentials have been provided before trying to run steps that need them.
@@ -48,12 +48,14 @@ jobs:
         with:
           files: |
             package/crds/**
+      
       - name: Report breaking CRD OpenAPI v3 schema changes
         if: steps.modified-crds.outputs.any_changed == 'true'
         env:
           MODIFIED_CRD_LIST: ${{ steps.modified-crds.outputs.all_changed_files }}
         run: |
           make crddiff
+      
       - name: Report native schema version changes
         if: ${{ inputs.upjet-based-provider }}
         run: |
@@ -253,7 +255,7 @@ jobs:
           platforms: all
 
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
         with:
           version: ${{ env.DOCKER_BUILDX_VERSION }}
           install: true
@@ -300,6 +302,9 @@ jobs:
       - name: Vendor Dependencies
         run: make vendor vendor.check
 
+      - name: Ensure all tools are installed
+        run: make tools
+
       - name: Build Artifacts
         run: make -j2 build.all
         env:
@@ -308,7 +313,7 @@ jobs:
           BUILD_ARGS: "--load"
 
       - name: Upload Artifacts to GitHub
-        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32 #v3
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: output
           path: _output/**

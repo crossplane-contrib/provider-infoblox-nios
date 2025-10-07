@@ -27,6 +27,9 @@ type NetworkContainerInitParameters struct {
 	// The Extensible attributes of the network container to be added/updated, as a map in JSON format
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
 
+	// The parent network/network-container block's extensible attributes.
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
+
 	// The name of network view for the network container.
 	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
 
@@ -48,13 +51,21 @@ type NetworkContainerObservation struct {
 	// The Extensible attributes of the network container to be added/updated, as a map in JSON format
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
 
+	// The parent network/network-container block's extensible attributes.
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
+
 	ID *string `json:"id,omitempty" tf:"id,omitempty"`
+
+	InternalID *string `json:"internalId,omitempty" tf:"internal_id,omitempty"`
 
 	// The name of network view for the network container.
 	NetworkView *string `json:"networkView,omitempty" tf:"network_view,omitempty"`
 
 	// The parent network container block in CIDR format to allocate from.
 	ParentCidr *string `json:"parentCidr,omitempty" tf:"parent_cidr,omitempty"`
+
+	// NIOS object's reference, not to be set by a user.
+	Ref *string `json:"ref,omitempty" tf:"ref,omitempty"`
 }
 
 type NetworkContainerParameters struct {
@@ -74,6 +85,10 @@ type NetworkContainerParameters struct {
 	// The Extensible attributes of the network container to be added/updated, as a map in JSON format
 	// +kubebuilder:validation:Optional
 	ExtAttrs *string `json:"extAttrs,omitempty" tf:"ext_attrs,omitempty"`
+
+	// The parent network/network-container block's extensible attributes.
+	// +kubebuilder:validation:Optional
+	FilterParams *string `json:"filterParams,omitempty" tf:"filter_params,omitempty"`
 
 	// The name of network view for the network container.
 	// +kubebuilder:validation:Optional
