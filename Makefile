@@ -97,7 +97,7 @@ xpkg.build.provider-infoblox-nios: do.build.images
 
 # NOTE(hasheddan): we ensure up is installed prior to running platform-specific
 # build steps in parallel to avoid encountering an installation race condition.
-build.init: $(UP)
+build.init: $(UP) tools
 
 # ====================================================================================
 # Setup Terraform for fetching provider schema
